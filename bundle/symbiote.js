@@ -163,6 +163,10 @@ symbiote.UiLocator = function(){
     }
   }
 
+  function updateOrientation(orientation){
+    $(paper.canvas).parent().removeClass('landscape').removeClass('portrait').addClass(orientation);
+  }
+
   function updateViews(views){
     allViews = views;
   }
@@ -173,7 +177,8 @@ symbiote.UiLocator = function(){
     hideViewLocation: hideViewLocation,
     updateBackdrop: updateBackdrop,
     updateViews: updateViews,
-    updateDeviceFamily: updateDeviceFamily
+    updateDeviceFamily: updateDeviceFamily,
+    updateOrientation: updateOrientation
   };
 };
 
@@ -259,20 +264,20 @@ $(document).ready(function() {
   function displayDetailsFor( view ) {
     console.debug( 'displaying details for:', view );
 
-    var $table = $('<table/>');
+    var $ul = $('<ul/>');
 
-    function tableRow( propertyName, propertyValue, cssClass ){
+    function createListItem( propertyName, propertyValue, cssClass ){
       if( propertyValue === null ){
         propertyValue = 'null';
       }else if( typeof propertyValue === 'object' ){ 
         propertyValue = JSON.stringify(propertyValue);
       } 
 
-      return $('<tr/>').addClass(cssClass)
+      return $('<li/>').addClass(cssClass)
         .append( 
-          $('<td/>').text(propertyName),
-          $('<td/>').text(propertyValue) )
-        .appendTo( $table );
+          $('<div/>').addClass('key').text(propertyName),
+          $('<div/>').addClass('value').text(propertyValue) )
+        .appendTo( $ul );
     }
 
     
@@ -280,7 +285,7 @@ $(document).ready(function() {
       if( !view.hasOwnProperty(propertyName) ){ return; }
 
       var propertyValue = view[propertyName];
-      $table.append( tableRow( propertyName, propertyValue, 'interesting' ) );
+      $ul.append( createListItem( propertyName, propertyValue, 'interesting' ) );
     });
 
 
@@ -289,11 +294,11 @@ $(document).ready(function() {
       if( _.contains( INTERESTING_PROPERTIES, propertyName ) ){ return; } // don't want to include the interesting properties twice
 
       var propertyValue = view[propertyName];
-      $table.append( tableRow( propertyName, propertyValue ) );
+      $ul.append( createListItem( propertyName, propertyValue ) );
     });
 
-    $domDetails.children().remove();
-    $table.appendTo( $domDetails );
+    $domDetails.empty();
+    $ul.appendTo( $domDetails );
   }
 
   function treeElementSelected(){
@@ -432,6 +437,9 @@ $(document).ready(function() {
   }
 
   function guessAtDeviceFamilyBasedOnViewDump(data){
+    var firstChildViewFrame = data.subviews[0].accessibilityFrame;
+
+    console.log( JSON.stringify( firstChildViewFrame ) ) ;
     switch( data.accessibilityFrame.size.height ){
       case 1024:
         return 'ipad';
@@ -443,9 +451,29 @@ $(document).ready(function() {
     }
   }
 
+  function refreshOrientation(){
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: symbiote.baseUrlFor("/orientation"),
+      success: function(data) {
+        var orientation = data.orientation;
+        
+        console.debug( 'device orientation is '+orientation );
+        uiLocator.updateOrientation(orientation);
+      },
+      error: function(xhr,status,error) {
+        alert( "Error while talking to Frank: " + status );
+      }
+    });
+  }
+
+
 
   function refreshViewHeirarchy(){
     showLoadingUI();
+
+    refreshOrientation();
 
     $.ajax({
       type: "POST",
@@ -473,7 +501,6 @@ $(document).ready(function() {
       }
     });
   }
-
 
 
 	$('#dump_button').click( function(){
