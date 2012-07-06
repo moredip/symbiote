@@ -1,6 +1,8 @@
-body {
-	font-family: Georgia;
+html {
   background-color: #efefef;
+}
+body {
+	font-family: "Helvetica Neue", "HelveticaNeue", Arial;
 }
 
 input, button {
