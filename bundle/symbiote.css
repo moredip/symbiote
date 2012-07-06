@@ -294,9 +294,9 @@ div#accessible-views span{
 }
 
 #live-view button {
-  -webkit-border-radius: 3px 0 0 3px;
-     -moz-border-radius: 3px 0 0 3px;
-          border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
 }
 
 #live-view button.down {
@@ -324,7 +324,11 @@ div#accessible-views span{
 }
 
 #ui-locator-rotator {
+  float: right;
   font-family: Pictos;
+  -webkit-border-radius: 0 0 0 3px;
+     -moz-border-radius: 0 0 0 3px;
+          border-radius: 0 0 0 3px;
 }
 
 #ui-locator-view.landscape{
