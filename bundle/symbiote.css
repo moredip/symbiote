@@ -55,42 +55,48 @@ button:active { background: #999; }
 
 #refresh { 
   float: right;
-  padding-left: 40px;
 }
 
-#refresh button {
+#refresh button, #refresh span {
   height: 40px;
-  position: relative;
-  border-radius: 3px 0 0 3px;
-  padding-left: 40px;
-}
-#refresh button:before {
-  content: "";
   width: 40px;
-  height: 40px;
-  line-height: 40px;
+  position: relative;
   display: block;
+  text-align: center;
+  border-radius: 3px 0 0 3px;
+}
+#refresh span {
   position: absolute;
   top: 0;
-  left: 0;
-  background: url('images/ajax-loader.gif') center center no-repeat;
-  background-size: 50% auto;
+  right: 0;
+  background: url('images/loader.png') center center no-repeat;
+  background-size: 80% auto;
+  -webkit-transition: background 1s;
 }
 
-img#loading {
-  vertical-align: middle;
-  margin-right: 6px;
+.working #refresh span {
+  /*-webkit-animation: spin 1s infinite linear;*/
+  background-image:url('images/loader.gif');
+  background-size: 80% auto;
+}
+
+/* animation for refresh */
+@-webkit-keyframes spin {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
 }
 
 #selector-test {
   padding: 10px;
   text-align: center;
 }
+
 #selector-test > input {
   display: inline-block;
   position: relative;
   width: 45%;
 }
+
 #flash-button { 
   width: 30%;
   display: inline-block;
@@ -108,7 +114,6 @@ img#loading {
   position: absolute;
   top: 0;
   bottom: 0;
-  overflow: hidden;
 }
 
 #inspect-tabs {
@@ -216,7 +221,7 @@ div#dom_dump .treeview .hovered-in-locator {
   padding: 6px 0;
   border-top: 2px solid rgba(255,255,255, .7);
   border-bottom: 1px solid rgba(0, 0, 0, .2);
-  -webkit-transition: background-color .15s;
+  -webkit-transition: background-color .1s;
 }
 #dom_detail li:first-child { border-top: none; }
 #dom_detail li:last-child { border-bottom: none; }
@@ -263,17 +268,46 @@ div#accessible-views span{
   padding: 0;
 }
 
-div#live-view{
+#live-view, #ui-live-view-rotator {
   text-align: center;
+  display: inline-block;
+  float: right;
+}
+
+#live-view button {
+  -webkit-border-radius: 3px 0 0 3px;
+     -moz-border-radius: 3px 0 0 3px;
+          border-radius: 3px 0 0 3px;
+}
+
+#live-view button.down {
+  background-image: -webkit-linear-gradient(top, #2380CC, #154E7C);
+  background-image:    -moz-linear-gradient(top, #2380CC, #154E7C);
+  background-image:         linear-gradient(top, #2380CC, #154E7C);
+}
+
+#live-view button span {
+  font-family: Pictos;
+  font-size: 20px;
 }
 
 #ui-locator-view{
   text-align: center;
-  -webkit-transition: -webkit-transform .3s
+  -webkit-transition: -webkit-transform .3s;
+     -moz-transition:    -moz-transform .3s;
+          transition:         transform .3s;
 }
 
-div#ui-locator-view.landscape{
+#ui-locator-rotator {
+  font-family: Pictos;
+}
+
+#ui-locator-view.landscape{
+  position: absolute;
+  right: 100px;
   -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+          transform: rotate(90deg);
 }
 
 #query {

@@ -10,6 +10,7 @@
     <script src='json2.js'></script>
     <script src='underscore.js'></script>
     <script src='symbiote.js'></script>
+    <link href='pictos/pictos.css' rel='stylesheet' />
     <link href='reset.css' rel='stylesheet' />
     <link href='jquery-ui.css' rel='stylesheet' />
     <link href='jquery.treeview.css' rel='stylesheet' />
@@ -21,7 +22,7 @@
       <h1>symbiote</h1>
       <i>From here you can inspect the current state of the app's UI, and test which UI elements a selector will select</i>
       <div id='refresh'>
-        <button id='dump_button'>Refresh</button>
+        <button id='dump_button'><span></span></button>
       </div>
     </header>
 
@@ -70,8 +71,12 @@
         </ul>
         <div id='ui-locator'>
           <div id='live-view'>
-            <button>Start Live View</button>
+            <button>
+              <span>Y</span>
+              Live
+            </button>
           </div>
+          <button id="ui-locator-rotator">1</button>
           <div id='ui-locator-view'></div>
           
         </div>
