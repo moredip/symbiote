@@ -119,6 +119,7 @@ button:active { background: #999; }
 #inspect-tabs {
   right: 0;
   left: 60%;
+  overflow: hidden;
   border-left: 1px solid rgba(255,255,255, .1);
   -webkit-transition: left .3s;
      -moz-transition: left .3s;
@@ -146,8 +147,8 @@ button:active { background: #999; }
 }
 
 /* respond to landscape view. */
-.landscape #inspect-tabs { left: 40%; }
-.landscape #list-tabs { right: 60%; }
+.landscape #inspect-tabs { left: 50%; }
+.landscape #list-tabs { right: 50%; }
 
 
 #list-tabs > div, #dom_detail {
