@@ -120,6 +120,9 @@ button:active { background: #999; }
   right: 0;
   left: 60%;
   border-left: 1px solid rgba(255,255,255, .1);
+  -webkit-transition: left .3s;
+     -moz-transition: left .3s;
+          transition: left .3s;
   -webkit-box-shadow: inset 3px 0 3px 0 rgba(0,0,0, .4);
      -moz-box-shadow: inset 3px 0 3px 0 rgba(0,0,0, .4);
           box-shadow: inset 3px 0 3px 0 rgba(0,0,0, .4);
@@ -131,6 +134,9 @@ button:active { background: #999; }
 #list-tabs {
   right: 40%;
   left: 0;
+  -webkit-transition: right .3s;
+     -moz-transition: right .3s;
+          transition: right .3s;
   -webkit-border-radius: 0 3px 0 0;
      -moz-border-radius: 0 3px 0 0;
           border-radius: 0 3px 0 0;
@@ -138,6 +144,11 @@ button:active { background: #999; }
      -moz-box-shadow: inset -3px 0 3px 0 rgba(0,0,0, .4);
           box-shadow: inset -3px 0 3px 0 rgba(0,0,0, .4);
 }
+
+/* respond to landscape view. */
+.landscape #inspect-tabs { left: 40%; }
+.landscape #list-tabs { right: 60%; }
+
 
 #list-tabs > div, #dom_detail {
   position: absolute;
@@ -293,7 +304,8 @@ div#accessible-views span{
 
 #ui-locator-view{
   position: absolute;
-  top: 70px;
+  z-index: -1;
+  top: 40px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -309,7 +321,6 @@ div#accessible-views span{
 
 #ui-locator-view.landscape{
   position: absolute;
-  right: 100px;
   -webkit-transform: rotate(90deg);
      -moz-transform: rotate(90deg);
           transform: rotate(90deg);
