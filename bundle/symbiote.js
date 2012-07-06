@@ -164,7 +164,8 @@ symbiote.UiLocator = function(){
   }
 
   function updateOrientation(orientation){
-    $(paper.canvas).parent().removeClass('landscape').removeClass('portrait').addClass(orientation);
+    // $(paper.canvas).parent().removeClass('landscape').removeClass('portrait').addClass(orientation);
+    $('#ui-locator-view, .the-columns').removeClass('landscape').removeClass('portrait').addClass(orientation);
   }
 
   function updateViews(views){
@@ -214,7 +215,7 @@ $(document).ready(function() {
   var $domDetails = $('#dom_detail'),
       $domList = $('div#dom_dump > ul'),
       $domAccessibleDump = $('div#accessible-views'),
-      $loading = $('#loading'),
+      $loading = $(''),
       INTERESTING_PROPERTIES = ['class', 'accessibilityLabel', 'tag', 'alpha', 'isHidden'],
       uiLocator = symbiote.UiLocator(),
       liveView;
@@ -253,11 +254,11 @@ $(document).ready(function() {
   }
 
   function showLoadingUI() {
-    $loading.show();
+    $('body').addClass('working');
   }
 
   function hideLoadingUI() {
-    $loading.hide();
+    $('body').removeClass('working');
   }
 
 
@@ -429,6 +430,7 @@ $(document).ready(function() {
 
       $(divHtml)
         .click( function(){
+          $('#query').val( selector );
           sendFlashCommand( selector );
           return false;
         })
@@ -518,17 +520,18 @@ $(document).ready(function() {
     $(this).toggleClass('down');
     if( $(this).hasClass('down') ){
       liveView.start();
-      $(this).text('stop Live View');
     }else{
       liveView.stop();
-      $(this).text('start Live View');
     }
   });
 
+  $('#ui-locator-rotator').click( function(){
+    $('#ui-locator-view, .the-columns').toggleClass('landscape');
+  });
 
   //initial UI setup
 
-	$('#loading').hide();
+	// $('#loading').hide();
   
   // do initial DOM dump straight after page has finished loading
   $('#dump_button').click();
