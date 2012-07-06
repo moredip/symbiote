@@ -430,6 +430,7 @@ $(document).ready(function() {
 
       $(divHtml)
         .click( function(){
+          $('#query').val( selector );
           sendFlashCommand( selector );
           return false;
         })
