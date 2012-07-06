@@ -17,37 +17,34 @@
     %link(href="symbiote.css" rel="stylesheet")
 
   %body
-    #header
+    %header#header
       #main-tab-1
         %h1 symbiote
         %i From here you can inspect the current state of the app's UI, and test which UI elements a selector will select
+        #refresh
+          %button#dump_button
+            %span
 
-    %div.symbiote_shell
-      %div.ui-widget
-        %td
-          #selector-test
-            %label(for="query") Selector
-            %input#query(placeholder="label marked:'Search'")
-            %button#flash_button Flash
-            %input#selector_engine(placeholder="uiquery")
-        %td
-          #refresh
-            %img#loading(src="images/ajax-loader.gif")
-            %button#dump_button Refresh
+    %section.symbiote_shell
+      #selector-test
+        %input#query(placeholder="Selector label marked:'Search'")
+        %button#flash_button Flash
+        %input#selector_engine(placeholder="uiquery")
 
-        #list-tabs
+    %section.the-columns
+      #list-tabs
+        %ul
+          %li
+            %a(href="#dom_dump") View Heirarchy
+          %li
+            %a(href="#accessible-views-tab") Accessible Elements
+        #dom_dump
           %ul
-            %li
-              %a(href="#dom_dump") View Heirarchy
-            %li
-              %a(href="#accessible-views-tab") Accessible Elements
-          #dom_dump
-            %ul
-          #accessible-views-tab
-            %div.hints
-              %p Here is a list of all elements with accessibility labels.
-              %p Clicking on a row will flash that view element in the simulator. Hover over a row to see the selector used to flash that view element.
-            #accessible-views
+        #accessible-views-tab
+          %div.hints
+            %p Here is a list of all elements with accessibility labels.
+            %p Clicking on a row will flash that view element in the simulator. Hover over a row to see the selector used to flash that view element.
+          #accessible-views
 
         #inspect-tabs
           %ul
@@ -56,9 +53,11 @@
             %li
               %a(href="#ui-locator") View Locator
           #ui-locator 
-            #ui-locator-view
             #live-view
               %button start Live View
-              
+                %span Y
+            %button#ui-locator-rotator 1
+            #ui-locator-view
+
           #dom_detail
             %p Click an element in the view heirarchy on the right to see details of that element here.
