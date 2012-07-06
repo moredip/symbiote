@@ -15,6 +15,7 @@ input, button {
 }
 
 input {
+  text-align: left;
   border-bottom: 1px solid rgba(255,255,255, .2);
 }
 
@@ -51,7 +52,8 @@ button:active { background: #999; }
   font-weight: bold;          
 }
 
-#header h1 { 
+#header h1 {
+  font-size: 2em;
   float: left;
 }
 
@@ -215,8 +217,9 @@ a#dump_button {
   vertical-align: middle;
 }
 
-div#dom_dump {
-  font-size:0.8em;
+#dom_dump {
+  padding: 0 10px 10px 10px;
+  
 }
 
 div#dom_dump .treeview .selected { 
