@@ -20,21 +20,19 @@
       <h1>symbiote</h1>
       <i>From here you can inspect the current state of the app's UI, and test which UI elements a selector will select</i>
       <div id='refresh'>
-        <button id='dump_button'><span></span></button>
+        <button id='dump_button'>
+          <span></span>
+        </button>
       </div>
     </header>
-
-    
     <section class='symbiote_shell'>
       <article id='selector-test'>
-          <input id='query' placeholder="Selector label marked:'Search'" />
-          <button id='flash_button'>Flash</button>
-          <input id='selector_engine' placeholder='uiquery' />
+        <input id='query' placeholder="Selector label marked:'Search'" />
+        <button id='flash_button'>Flash</button>
+        <input id='selector_engine' placeholder='uiquery' />
       </article>
     </section>
-
-
-    <section class="the-columns">
+    <section class='the-columns'>
       <div id='list-tabs'>
         <ul>
           <li>
@@ -47,7 +45,6 @@
         <div id='dom_dump'>
           <ul></ul>
         </div>
-
         <div id='accessible-views-tab'>
           <div class='hints'>
             <p>Here is a list of all elements with accessibility labels.</p>
@@ -68,19 +65,17 @@
         <div id='ui-locator'>
           <div id='live-view'>
             <button>
-              <span>Y</span>
               Live
+              <span>Y</span>
             </button>
           </div>
-          <button id="ui-locator-rotator">1</button>
+          <button id='ui-locator-rotator'>1</button>
           <div id='ui-locator-view'></div>
-          
         </div>
         <div id='dom_detail'>
           <p>Click an element in the view heirarchy on the right to see details of that element here.</p>
         </div>
       </div>
     </section>
-    
   </body>
 </html>
