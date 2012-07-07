@@ -1,7 +1,6 @@
 /*jslint browser: true, white: false, devel: true */
 /*global window: true, Raphael: true, $: true, _: true */
 
-
 var symbiote = {};
 
 symbiote.baseUrlFor = function(path){ return window.location.protocol + "//" + window.location.host + "/" + path; };
@@ -391,7 +390,7 @@ $(document).ready(function() {
 	query: selector,
 	selector_engine: engine ? engine : 'uiquery' ,
       operation: {
-        method_name: 'flash',
+        method_name: 'FEX_flash',
         arguments: []
       }
     };
