@@ -9,6 +9,7 @@ symbiote.UiLocator = function(){
   var allViews = [],
       paper = new Raphael( 'ui-locator-view'),
       viewIndicator = { remove: _.identity },
+      viewIndicators = [],
       screenshotUrl = symbiote.baseUrlFor( "screenshot" ),
       backdrop = null,
       erstaz = null;
@@ -109,27 +110,33 @@ symbiote.UiLocator = function(){
 
   }
 
-  function showViewLocation( view ) {
-    var screenOffset = erstaz.screenOffset();
-
-    viewIndicator.remove();
-
-    viewIndicator = paper.rect( 
-      view.accessibilityFrame.origin.x, 
-      view.accessibilityFrame.origin.y, 
-      view.accessibilityFrame.size.width, 
-      view.accessibilityFrame.size.height
-    )
-      .attr({
-        fill: '#aaff00',
-        opacity: 0.8,
-        stroke: 'black',
-      })
-      .translate( screenOffset.x, screenOffset.y );
+  function removeHighlights() {
+    _.each( viewIndicators, function(v){ v.remove(); } );
   }
 
-  function hideViewLocation() {
-    viewIndicator.remove();
+  function highlightAccessibilityFrames( frames ) {
+    var screenOffset = erstaz.screenOffset();
+   
+    removeHighlights();
+
+    viewIndicators = _.map( frames, function(frame){
+      return paper.rect( 
+        frame.origin.x, 
+        frame.origin.y, 
+        frame.size.width, 
+        frame.size.height
+      )
+        .attr({
+          fill: '#aaff00',
+          opacity: 0.8,
+          stroke: 'black',
+        })
+        .translate( screenOffset.x, screenOffset.y );
+    });
+  }
+
+  function highlightAccessibilityFrame( frame ) {
+    highlightAccessibilityFrames( [frame] );
   }
 
   function addBackdropImage(){
@@ -173,8 +180,9 @@ symbiote.UiLocator = function(){
 
 
   return {
-    showViewLocation: showViewLocation,
-    hideViewLocation: hideViewLocation,
+    highlightAccessibilityFrame: highlightAccessibilityFrame,
+    highlightAccessibilityFrames: highlightAccessibilityFrames,
+    removeHighlights: removeHighlights,
     updateBackdrop: updateBackdrop,
     updateViews: updateViews,
     updateDeviceFamily: updateDeviceFamily,
@@ -313,11 +321,11 @@ $(document).ready(function() {
 
   function treeElementEntered(){
     var view = $(this).data('rawView');
-    uiLocator.showViewLocation( view );
+    uiLocator.highlightAccessibilityFrame( view.accessibilityFrame );
   }
 
   function treeElementLeft(){
-    uiLocator.hideViewLocation();
+    uiLocator.removeHighlights();
   }
 
   function listItemTitleFor( rawView ) {
@@ -384,18 +392,19 @@ $(document).ready(function() {
   }
 
 
-
-  function sendFlashCommand( selector, engine ) {
-    var command = {
-	query: selector,
-	selector_engine: engine ? engine : 'uiquery' ,
-      operation: {
-        method_name: 'FEX_flash',
-        arguments: []
-      }
-    };
+  function sendMapRequest( selector, engine, method_name, method_args ) {
+    var deferable = new $.Deferred(),
+        command = {
+          query: selector,
+          selector_engine: engine ? engine : 'uiquery' ,
+          operation: {
+            method_name: method_name, 
+            arguments: method_args || []
+          }
+        };
 
     showLoadingUI();
+
     $.ajax({
       type: "POST",
       dataType: "json",
@@ -404,20 +413,42 @@ $(document).ready(function() {
       success: function(data) {
         if( isErrorResponse( data ) ) {
           displayErrorResponse( data );
+          deferable.reject(data);
         }
+        deferable.resolve(data);
       },
       error: function(xhr,status,error) {
         alert( "Error while talking to Frank: " + status );
+        deferable.reject(error);
       },
       complete: function(xhr,status) {
         hideLoadingUI();
       }
     });
 
-    return false;
+    return deferable.promise();
   }
 
-    function updateAccessibleViews( views ) {
+  function highlightViewLocations( selector, engine ){
+    sendMapRequest( selector, engine, 'accessibilityFrame' ).done( function(data){
+      locations = data.results;
+      if( locations.length < 1 ){
+        alert( 'no views found for that selector' );
+        return;
+      }
+
+      uiLocator.highlightAccessibilityFrames( locations );
+      window.setTimeout( function(){
+        uiLocator.removeHighlights();
+      }, 1000 );
+    });
+  }
+
+  function sendFlashCommand( selector, engine ) {
+    sendMapRequest(selector,engine,'FEX_flash');
+  }
+
+  function updateAccessibleViews( views ) {
     var accessibleViews = filterAccessibleViews( views ),
         divTemplate = _.template( '<div><a href="#" title="<%=selector%>"><span class="viewClass"><%=viewClass%></span> with label "<span class="viewLabel"><%=viewLabel%></span>"</a></div>' );
 
@@ -431,6 +462,7 @@ $(document).ready(function() {
         .click( function(){
           $('#query').val( selector );
           sendFlashCommand( selector );
+          highlightViewLocations( selector );
           return false;
         })
         .appendTo( $domAccessibleDump );
@@ -509,8 +541,12 @@ $(document).ready(function() {
     uiLocator.updateBackdrop();
   });
 
-  $('#flash_button').click( function(){
+  $('button#flash').click( function(){
       sendFlashCommand( $("input#query").val(), $("input#selector_engine").val() );
+  });
+
+  $('button#highlight').click( function(){
+      highlightViewLocations( $("input#query").val(), $("input#selector_engine").val() );
   });
   
   liveView = symbiote.LiveView( uiLocator.updateBackdrop, refreshViewHeirarchy );
