@@ -98,7 +98,7 @@ button:active { background: #999; }
 #selector-test > input {
   display: inline-block;
   position: relative;
-  width: 45%;
+  width: 40%;
 }
 
 #flash-button { 
