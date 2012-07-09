@@ -5,11 +5,13 @@
     <title>Symbiote</title>
     <script src='jquery.min.js'></script>
     <script src='jquery-ui.min.js'></script>
+    <script src='coffee-script.js'></script>
     <script src='raphael-min.js'></script>
     <script src='jquery.treeview.js'></script>
     <script src='json2.js'></script>
     <script src='underscore.js'></script>
     <script src='symbiote.js'></script>
+    <script src='symbiote_ui.coffee' type='text/coffeescript'></script>
     <link href='reset.css' rel='stylesheet' />
     <link href='pictos/pictos.css' rel='stylesheet' />
     <link href='jquery.treeview.css' rel='stylesheet' />
@@ -30,7 +32,14 @@
         <input id='query' placeholder="Selector label marked:'Search'" />
         <button id='highlight'>Highlight</button>
         <button id='flash'>Flash In App</button>
-        <input id='selector_engine' placeholder='uiquery' />
+        <div class='selector_engine'>
+          <input id='selector_engine' placeholder='shelley_compat' />
+          <button id='selector_engine_dropdown'>&#x25BC;</button>
+          <ul class='shown' id='selector_engine_options'>
+            <li>shelley_compat</li>
+            <li>uiquery</li>
+          </ul>
+        </div>
       </article>
     </section>
     <section class='the-columns'>

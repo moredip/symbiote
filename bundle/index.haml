@@ -6,11 +6,13 @@
 
     %script(src="jquery.min.js")
     %script(src="jquery-ui.min.js")
+    %script(src="coffee-script.js")
     %script(src="raphael-min.js")
     %script(src="jquery.treeview.js")
     %script(src="json2.js")
     %script(src="underscore.js")
     %script(src="symbiote.js")
+    %script(src="symbiote_ui.coffee" type="text/coffeescript")
     %link(href="reset.css" rel="stylesheet")
     %link(href="pictos/pictos.css" rel="stylesheet")
     %link(href="jquery.treeview.css" rel="stylesheet")
@@ -29,7 +31,14 @@
         %input#query(placeholder="Selector label marked:'Search'")
         %button#highlight Highlight
         %button#flash Flash In App
-        %input#selector_engine(placeholder="uiquery")
+        .selector_engine
+          %input#selector_engine(placeholder="shelley_compat")
+          %button#selector_engine_dropdown &#x25BC; 
+          %ul#selector_engine_options.shown
+            %li shelley_compat
+            %li uiquery
+
+
 
     %section.the-columns
       #list-tabs
