@@ -1,16 +1,22 @@
-setupSelectorEngineDropdown = ->
-  $option_list = $('ul#selector_engine_options')
-  $option_input = $('input#selector_engine')
+setupDropdowns = ->
+  $extra_actions_list = $('.action-buttons .extra-actions')
+  $se_option_list = $('ul#selector_engine_options')
+  $se_option_input = $('input#selector_engine')
 
   $('button#selector_engine_dropdown').on 'click', (e)->
     e.stopPropagation()
-    $option_list.toggleClass('shown')
+    $se_option_list.toggleClass('shown')
+
+  $('li', $se_option_list).on 'click', (e)->
+    $se_option_input.val( $(e.target).text() )
+
+  $('.action-buttons .drop-indicator').on 'click', (e)->
+    e.stopPropagation()
+    $extra_actions_list.toggleClass('shown')
 
   $('body').on 'click', ->
-    $option_list.removeClass('shown')
-
-  $('li', $option_list).on 'click', (e)->
-    $option_input.val( $(e.target).text() )
+    $extra_actions_list.removeClass('shown')
+    $se_option_list.removeClass('shown')
 
 $ -> 
-  setupSelectorEngineDropdown()
+  setupDropdowns()

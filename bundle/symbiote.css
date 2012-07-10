@@ -91,6 +91,8 @@ button:active { background: #999; }
 }
 
 #selector-test {
+  position: relative;
+	top: -60px;
   padding: 10px;
   /*text-align: center;*/
 }
@@ -104,13 +106,12 @@ button:active { background: #999; }
 }
 
 #selector-test input#selector_engine {
-  width: 15em;
+  width: 13em;
 }
 
 div.selector_engine {
   position: relative;
 	display: inline-block;
-	width: 30%;
 }
 
 /*
@@ -158,9 +159,47 @@ ul#selector_engine_options.shown {
 #selector_engine_options li:not(:last-of-type){ border-bottom: 1px solid rgba(0,0,0, .3); }
 
 
-#flash-button { 
-  width: 30%;
-  display: inline-block;
+
+
+.action-buttons {
+  position: relative;
+	display: inline-block;
+	width: 9em;
+	top: 60px;
+}
+
+.action-buttons button {
+  position: relative;
+	width: 100%;
+}
+.action-buttons .drop-indicator {
+	color: #eee;
+  position: absolute;
+  width: 1.5em;
+  right: 0;
+	top: 0;
+	padding: 5px;
+}
+
+.action-buttons * {
+	z-index: 1;
+}
+.action-buttons .extra-actions {
+	z-index: 1;
+	opacity: 0;
+  visibility:hidden;
+  -webkit-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
+  	 -moz-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
+  		 -o-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
+					transition: visibility 0s linear 0.2s,opacity 0.2s linear;
+}
+.action-buttons .extra-actions.shown {
+  opacity: 1;
+  visibility:visible;
+  transition-delay:0s;
+  -webkit-transition-delay:0s;
+  -moz-transition-delay:0s;
+  -o-transition-delay:0s;
 }
 
 .the-columns {

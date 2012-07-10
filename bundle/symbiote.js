@@ -448,6 +448,10 @@ $(document).ready(function() {
     sendMapRequest(selector,engine,'FEX_flash');
   }
 
+  function sendTouchCommand( selector, engine ) {
+    sendMapRequest(selector,engine,'touch');
+  }
+
   function updateAccessibleViews( views ) {
     var accessibleViews = filterAccessibleViews( views ),
         divTemplate = _.template( '<div><a href="#" title="<%=selector%>"><span class="viewClass"><%=viewClass%></span> with label "<span class="viewLabel"><%=viewLabel%></span>"</a></div>' );
@@ -543,6 +547,10 @@ $(document).ready(function() {
 
   $('button#flash').click( function(){
       sendFlashCommand( $("input#query").val(), $("input#selector_engine").val() );
+  });
+
+  $('button#touch').click( function(){
+      sendTouchCommand( $("input#query").val(), $("input#selector_engine").val() );
   });
 
   $('button#highlight').click( function(){
