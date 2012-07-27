@@ -32,8 +32,9 @@ symbiote.UiLocator = function(){
   paper.canvas.setAttribute('preserveAspectRatio','xMidYMin meet');
 
   function iPhoneErsatz(raphael){
-    var BACKDROP_FRAME = { x: 24, y: 120, width: 320, height: 480 },
-        transformer;
+    var BACKDROP_FRAME = { x: 0, y: 0, width: 320, height: 480 },
+        transformer,
+        backdropTransformer;
 
     function drawFakeDevice(backdrop){
       transformer = symbiote.transformStack();
@@ -42,7 +43,7 @@ symbiote.UiLocator = function(){
       paper.canvas.setAttribute('height','100%');
       paper.canvas.setAttribute("viewBox", "0 0 380 720");
 
-      transformer.skew(0,15).rotate(0).translate(6,6);
+      transformer.skew(0,10).rotate(0).translate(6,6);
 
       // main outline of device
       paper.rect( 0, 0, 360, 708, 40 ).attr( {
@@ -64,17 +65,32 @@ symbiote.UiLocator = function(){
         'stroke-width': 2,
       }).transform( transformer.push().translate(-11,-11).descAndPop() );
 
-      //transformer.pop();
+      backdropTransformer = transformer.clone().translate(24,120).translate(-50,0);
 
       if( backdrop ){
-        backdrop.transform( transformer.push().translate(-50,0).descAndPop() );
-        // reposition backdrop within frame
-        backdrop.attr( BACKDROP_FRAME ).toFront();
+        backdrop
+          .transform( backdropTransformer.desc() )
+          .attr( BACKDROP_FRAME ).toFront();
       }
+    }
+
+    function drawHighlightFrame( frame ){
+      return paper.rect( 
+        0, 0,
+        frame.size.width, 
+        frame.size.height
+      )
+      .attr({
+        fill: '#aaff00',
+        opacity: 0.8,
+        stroke: 'black',
+      })
+      .transform( backdropTransformer.push().translate( frame.origin.x, frame.origin.y ).descAndPop() );
     }
 
     return {
       drawFakeDevice: drawFakeDevice,
+      drawHighlightFrame: drawHighlightFrame,
       screenOffset: function(){ return BACKDROP_FRAME; }
     };
 
@@ -146,18 +162,7 @@ symbiote.UiLocator = function(){
     removeHighlights();
 
     viewIndicators = _.map( frames, function(frame){
-      return paper.rect( 
-        frame.origin.x, 
-        frame.origin.y, 
-        frame.size.width, 
-        frame.size.height
-      )
-        .attr({
-          fill: '#aaff00',
-          opacity: 0.8,
-          stroke: 'black',
-        })
-        .translate( screenOffset.x, screenOffset.y );
+      return erstaz.drawHighlightFrame(frame);
     });
   }
 

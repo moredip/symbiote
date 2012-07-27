@@ -1,8 +1,12 @@
 R = Raphael
 
-symbiote.transformStack = ->
-  stack = []
-  currentMatrix = R.matrix()
+transformStack = (initialMatrix)->
+  currentMatrix = initialMatrix || R.matrix()
+  stack = [currentMatrix]
+
+  clone = ->
+    transformStack( currentMatrix.clone() )
+
 
   push = ->
     stack.push( currentMatrix )
@@ -45,6 +49,7 @@ symbiote.transformStack = ->
     @
 
 
+  clone: clone
   translate: translate
   rotate: rotate
   skew: skew
@@ -53,3 +58,6 @@ symbiote.transformStack = ->
   desc: desc
   descAndPop: descAndPop
   prefixedWithTranslate: prefixedWithTranslate
+
+
+symbiote.transformStack = transformStack
