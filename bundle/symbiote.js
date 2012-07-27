@@ -5,6 +5,21 @@ var symbiote = {};
 
 symbiote.baseUrlFor = function(path){ return window.location.protocol + "//" + window.location.host + "/" + path; };
 
+(function(){
+  proto = Raphael.matrix().__proto__;
+
+  proto.imTranslate = function(a,b){
+    var copy = this.clone();
+    copy.translate(a,b);
+    return copy;
+  }
+  proto.imRotate = function(x){
+    var copy = this.clone();
+    copy.rotate(x);
+    return copy;
+  }
+})();
+
 symbiote.UiLocator = function(){
   var allViews = [],
       paper = new Raphael( 'ui-locator-view'),
@@ -17,31 +32,42 @@ symbiote.UiLocator = function(){
   paper.canvas.setAttribute('preserveAspectRatio','xMidYMin meet');
 
   function iPhoneErsatz(raphael){
-    var BACKDROP_FRAME = { x: 24, y: 120, width: 320, height: 480 };
+    var BACKDROP_FRAME = { x: 24, y: 120, width: 320, height: 480 },
+        transformer;
 
     function drawFakeDevice(backdrop){
+      transformer = symbiote.transformStack();
       
       paper.canvas.setAttribute('width','100%');
       paper.canvas.setAttribute('height','100%');
       paper.canvas.setAttribute("viewBox", "0 0 380 720");
 
+      transformer.skew(0,15).rotate(0).translate(6,6);
+
       // main outline of device
-      paper.rect( 6, 6, 360, 708, 40 ).attr( {
+      paper.rect( 0, 0, 360, 708, 40 ).attr( {
           'fill': 'black',
           'stroke': 'gray',
           'stroke-width': 4,
-        });
+        }).transform( transformer.desc() )
+
 
       // home button
-      paper.circle( 180+6, 655, 34 ).attr( 'fill', '90-#303030-#101010' );
+      transformer.push().translate(180,655);
+      paper.circle( 0, 0, 34 )
+        .transform( transformer.desc() )
+        .attr( 'fill', '90-#303030-#101010' );
 
       // square inside home button
-      paper.rect( 180+6, 655, 22, 22, 5 ).attr({  
+      paper.rect( 0, 0, 22, 22, 5 ).attr({  
         'stroke': 'gray',
         'stroke-width': 2,
-      }).translate( -11, -11 );
+      }).transform( transformer.push().translate(-11,-11).descAndPop() );
+
+      //transformer.pop();
 
       if( backdrop ){
+        backdrop.transform( transformer.push().translate(-50,0).descAndPop() );
         // reposition backdrop within frame
         backdrop.attr( BACKDROP_FRAME ).toFront();
       }
@@ -191,7 +217,6 @@ symbiote.UiLocator = function(){
 };
 
 symbiote.LiveView = function(updateViewFn,updateHeirarchyFn){
-
   var viewTimer,heirTimer;
 
   function stop(){
