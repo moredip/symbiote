@@ -28,9 +28,6 @@ setupDropdowns = ->
     $extraActionsList.prepend($currentTopButton)
     
 
-    # remove button from top and but to top of extra buttons
-    # move tapped butotn
-
   $('body').on 'click', ->
     $extraActionsList.removeClass('shown')
     $se_option_list.removeClass('shown')
