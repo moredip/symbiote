@@ -1,0 +1,9 @@
+{
+  "name": "symbiote-dev",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Stuff used to build symbiote",
+  "dependencies": {
+    "coffee-script": "*"
+  }
+}
