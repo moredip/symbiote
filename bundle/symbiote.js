@@ -5,21 +5,6 @@ var symbiote = {};
 
 symbiote.baseUrlFor = function(path){ return window.location.protocol + "//" + window.location.host + "/" + path; };
 
-(function(){
-  proto = Raphael.matrix().__proto__;
-
-  proto.imTranslate = function(a,b){
-    var copy = this.clone();
-    copy.translate(a,b);
-    return copy;
-  }
-  proto.imRotate = function(x){
-    var copy = this.clone();
-    copy.rotate(x);
-    return copy;
-  }
-})();
-
 symbiote.UiLocator = function(){
   var allViews = [],
       paper = new Raphael( 'ui-locator-view'),
