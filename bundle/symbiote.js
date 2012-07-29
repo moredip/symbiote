@@ -8,8 +8,8 @@ symbiote.baseUrlFor = function(path){ return window.location.protocol + "//" + w
 symbiote.UiLocator = function(){
   var allViews = [],
       paper = new Raphael( 'ui-locator-view'),
-      viewIndicator = { remove: _.identity },
       viewIndicators = [],
+      individualViews = [],
       screenshotUrl = symbiote.baseUrlFor( "screenshot" ),
       backdrop = null,
       erstaz = null;
@@ -28,7 +28,9 @@ symbiote.UiLocator = function(){
       paper.canvas.setAttribute('height','100%');
       paper.canvas.setAttribute("viewBox", "0 0 380 720");
 
-      transformer.skew(0,10).rotate(0).translate(6,6);
+      transformer
+        //.skew(0,10)
+        .translate(6,6);
 
       // main outline of device
       paper.rect( 0, 0, 360, 708, 40 ).attr( {
@@ -50,13 +52,27 @@ symbiote.UiLocator = function(){
         'stroke-width': 2,
       }).transform( transformer.push().translate(-11,-11).descAndPop() );
 
-      backdropTransformer = transformer.clone().translate(24,120).translate(-50,0);
+      backdropTransformer = transformer.clone().translate(24,120);//.translate(-50,0);
 
       if( backdrop ){
         backdrop
           .transform( backdropTransformer.desc() )
           .attr( BACKDROP_FRAME ).toFront();
       }
+    }
+
+    function addViewSnapshot(params){
+      var size = params.frame.size,
+          origin = params.frame.origin;
+
+      image = paper.image(params.src,0,0,size.width,size.height)
+        .attr({
+          opacity: 0.2
+        })
+         .transform( backdropTransformer.push().translate( origin.x, origin.y ).descAndPop() );
+
+      $(image.node).data('original-params',params);
+      return image;
     }
 
     function drawHighlightFrame( frame ){
@@ -76,6 +92,7 @@ symbiote.UiLocator = function(){
     return {
       drawFakeDevice: drawFakeDevice,
       drawHighlightFrame: drawHighlightFrame,
+      addViewSnapshot: addViewSnapshot,
       screenOffset: function(){ return BACKDROP_FRAME; }
     };
 
@@ -159,6 +176,10 @@ symbiote.UiLocator = function(){
     return paper.image();
   }
 
+  function addViewSnapshot(params){
+    return erstaz.addViewSnapshot( params );
+  }
+
   function updateBackdrop(){
     if( !backdrop ){
       return;
@@ -198,6 +219,7 @@ symbiote.UiLocator = function(){
   return {
     highlightAccessibilityFrame: highlightAccessibilityFrame,
     highlightAccessibilityFrames: highlightAccessibilityFrames,
+    addViewSnapshot: addViewSnapshot,
     removeHighlights: removeHighlights,
     updateBackdrop: updateBackdrop,
     updateViews: updateViews,
@@ -278,10 +300,12 @@ $(document).ready(function() {
   function showLoadingUI() {
     $('body').addClass('working');
   }
+  symbiote.showLoadingUI = showLoadingUI;
 
   function hideLoadingUI() {
     $('body').removeClass('working');
   }
+  symbiote.hideLoadingUI = hideLoadingUI;
 
 
   function displayDetailsFor( view ) {
@@ -581,6 +605,11 @@ $(document).ready(function() {
     }else{
       liveView.stop();
     }
+  });
+
+  $("#asploder button").click( function(){
+    viewLoader = symbiote.createViewLoader( uiLocator );
+    viewLoader.update();
   });
 
   $('#ui-locator-rotator').click( function(){

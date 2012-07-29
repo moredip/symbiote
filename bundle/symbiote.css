@@ -405,7 +405,7 @@ div#dom_dump .treeview .hovered-in-locator {
   padding: 0;
 }
 
-#live-view, #ui-live-view-rotator {
+#live-view, #asploder, #ui-live-view-rotator {
   text-align: center;
   display: inline-block;
   float: right;

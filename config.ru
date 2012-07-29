@@ -21,6 +21,8 @@ class SinatraStaticServer < Sinatra::Base
       %Q|{"orientation":"portrait"}|
     when "/screenshot"
       send_file( File.expand_path( "../fake_screenshot", __FILE__ ) )
+    when "/screenshot/snapshot-all-views"
+      "faked out"
     else
       send_sinatra_file(request.path) {404}
     end
