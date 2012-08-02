@@ -16,10 +16,12 @@ snapshotUrlForView = (view)->
 createViewLoader = ( ui )->
 
   processView = (view, depth)->
+    view.depth = depth;
     ui.addViewSnapshot
       src: snapshotUrlForView(view)
       depth: depth
       frame: view.accessibilityFrame
+      uid: view.uid
 
   processViewPlusSubviews = (view, depth)->
     processView(view, depth)
@@ -28,6 +30,7 @@ createViewLoader = ( ui )->
   update = ->
     $.when( requestSnapshotRefresh(), fetchViewHeirarchy() ).done (_, viewHeirResponse)->
       viewHeir = viewHeirResponse[0]
+      ui.resetViewSnapshots()
       processViewPlusSubviews( viewHeir, 0 )
 
   {

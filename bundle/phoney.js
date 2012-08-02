@@ -26,10 +26,12 @@
   createViewLoader = function(ui) {
     var processView, processViewPlusSubviews, update;
     processView = function(view, depth) {
+      view.depth = depth;
       return ui.addViewSnapshot({
         src: snapshotUrlForView(view),
         depth: depth,
-        frame: view.accessibilityFrame
+        frame: view.accessibilityFrame,
+        uid: view.uid
       });
     };
     processViewPlusSubviews = function(view, depth) {
@@ -47,6 +49,7 @@
       return $.when(requestSnapshotRefresh(), fetchViewHeirarchy()).done(function(_, viewHeirResponse) {
         var viewHeir;
         viewHeir = viewHeirResponse[0];
+        ui.resetViewSnapshots();
         return processViewPlusSubviews(viewHeir, 0);
       });
     };

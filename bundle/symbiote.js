@@ -9,10 +9,12 @@ symbiote.UiLocator = function(){
   var allViews = [],
       paper = new Raphael( 'ui-locator-view'),
       viewIndicators = [],
-      individualViews = [],
+      imageViewsByUid = {},
       screenshotUrl = symbiote.baseUrlFor( "screenshot" ),
       backdrop = null,
-      erstaz = null;
+      erstaz = null,
+      ISO_MAJOR_OFFSET = 50,
+      ISO_MINOR_OFFSET = 5;
 
   paper.canvas.setAttribute('preserveAspectRatio','xMidYMin meet');
 
@@ -28,8 +30,10 @@ symbiote.UiLocator = function(){
       paper.canvas.setAttribute('height','100%');
       paper.canvas.setAttribute("viewBox", "0 0 380 720");
 
+      backdrop = paper.image();
+
       transformer
-        //.skew(0,10)
+        .skew(0,15)
         .translate(6,6);
 
       // main outline of device
@@ -52,7 +56,7 @@ symbiote.UiLocator = function(){
         'stroke-width': 2,
       }).transform( transformer.push().translate(-11,-11).descAndPop() );
 
-      backdropTransformer = transformer.clone().translate(24,120);//.translate(-50,0);
+      backdropTransformer = transformer.clone().translate(24,120).translate(-ISO_MAJOR_OFFSET,0);
 
       if( backdrop ){
         backdrop
@@ -61,18 +65,22 @@ symbiote.UiLocator = function(){
       }
     }
 
+    function matrixTransformedForView( matrix, origin, depth ){
+      return matrix.push()
+        .translate( origin.x, origin.y )
+        .translate( depth * -ISO_MINOR_OFFSET, 0 )
+        .descAndPop();
+    }
+
     function addViewSnapshot(params){
       var size = params.frame.size,
-          origin = params.frame.origin;
+          origin = params.frame.origin,
+          src = params.src,
+          depth = params.depth,
+          uid = params.uid;
 
-      image = paper.image(params.src,0,0,size.width,size.height)
-        .attr({
-          opacity: 0.2
-        })
-         .transform( backdropTransformer.push().translate( origin.x, origin.y ).descAndPop() );
-
-      $(image.node).data('original-params',params);
-      return image;
+      return paper.image(src,0,0,size.width,size.height)
+         .transform( matrixTransformedForView( backdropTransformer, origin, depth ) );
     }
 
     function drawHighlightFrame( frame ){
@@ -176,8 +184,44 @@ symbiote.UiLocator = function(){
     return paper.image();
   }
 
+  function eachViewSnapshot( fn ){
+    _.each( imageViewsByUid, function(image,uid){
+      fn( image );
+    });
+  }
+
+  function focusView( uid ) {
+    var image = imageViewsByUid[uid];
+    eachViewSnapshot( function(image){
+      image.attr({ 
+        opacity: 0.1
+      });
+    });
+
+    if( image ){
+      console.log( 'focussing on', image );
+
+      image.attr({ 
+        opacity: 0.9
+      });
+
+      window.setTimeout( function(){
+        image.attr( 'opacity', 0.1 );
+      }, 1000 );
+    }
+  }
+
+  function resetViewSnapshots(){
+    eachViewSnapshot( function(image){
+      image.remove();
+    });
+    imageViewsByUid = {};
+  }
+
   function addViewSnapshot(params){
-    return erstaz.addViewSnapshot( params );
+    var imageView = erstaz.addViewSnapshot( params );
+    imageViewsByUid[params.uid] = imageView;
+    return imageView;
   }
 
   function updateBackdrop(){
@@ -187,22 +231,22 @@ symbiote.UiLocator = function(){
 
     var cacheBusterUrl = screenshotUrl+"?"+(new Date()).getTime();
     backdrop.attr( 'src', cacheBusterUrl );
+    backdrop.attr( 'opacity', 0.1 );
   }
 
   function updateDeviceFamily(deviceFamily){
     if( !erstaz )
     {
+      paper.clear();
+
       if( deviceFamily === 'ipad' ){
         erstaz = iPadErsatz(paper);
       }else{
-        erstaz = iPhoneErsatz(paper);
+        erstaz = symbiote.createPhoneyPhone(paper);
       }
 
-      paper.clear();
       backdrop = addBackdropImage();
-      updateBackdrop();
-
-      erstaz.drawFakeDevice(backdrop);
+      erstaz.updateBackdrop( backdrop );
     }
   }
 
@@ -220,6 +264,8 @@ symbiote.UiLocator = function(){
     highlightAccessibilityFrame: highlightAccessibilityFrame,
     highlightAccessibilityFrames: highlightAccessibilityFrames,
     addViewSnapshot: addViewSnapshot,
+    resetViewSnapshots: resetViewSnapshots,
+    focusView: focusView,
     removeHighlights: removeHighlights,
     updateBackdrop: updateBackdrop,
     updateViews: updateViews,
@@ -360,7 +406,8 @@ $(document).ready(function() {
 
   function treeElementEntered(){
     var view = $(this).data('rawView');
-    uiLocator.highlightAccessibilityFrame( view.accessibilityFrame );
+    //uiLocator.highlightAccessibilityFrame( view.accessibilityFrame );
+    uiLocator.focusView( view.uid );
   }
 
   function treeElementLeft(){
