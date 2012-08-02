@@ -20,7 +20,11 @@ class SinatraStaticServer < Sinatra::Base
     when "/orientation"
       %Q|{"orientation":"portrait"}|
     when "/screenshot"
-      send_file( File.expand_path( "../fake_screenshot", __FILE__ ) )
+      send_file( File.expand_path( "../fake_server/fake_screenshot", __FILE__ ) )
+    when %r|^/screenshot/view-snapshot/|
+      uid = request.path.split("/").last
+      puts 'LOADING ' + uid
+      send_file( File.expand_path( "../fake_server/fake_view_snapshots/#{uid}", __FILE__ ) )
     when "/screenshot/snapshot-all-views"
       "faked out"
     else
@@ -29,7 +33,7 @@ class SinatraStaticServer < Sinatra::Base
   end
 
   post("/dump") do
-    send_file( File.expand_path( "../fake_dump_response.json", __FILE__ ) )
+    send_file( File.expand_path( "../fake_server/fake_dump_response.json", __FILE__ ) )
   end
 
   not_found do
