@@ -132,14 +132,9 @@ symbiote.UiLocator = function(){
     return imageView;
   }
 
-  function updateBackdrop(){
-    if( !backdrop ){
-      return;
-    }
-
-    var cacheBusterUrl = screenshotUrl+"?"+(new Date()).getTime();
-    backdrop.attr( 'src', cacheBusterUrl );
-    backdrop.attr( 'opacity', 0.1 );
+  function refreshBackdrop(){
+    if( erstaz )
+      erstaz.refreshBackdrop()
   }
 
   function updateDeviceFamily(deviceFamily){
@@ -152,9 +147,6 @@ symbiote.UiLocator = function(){
       }else{
         erstaz = symbiote.createPhoneyPhone(paper);
       }
-
-      backdrop = paper.image();
-      erstaz.updateBackdrop( backdrop );
     }
   }
 
@@ -175,7 +167,7 @@ symbiote.UiLocator = function(){
     resetViewSnapshots: resetViewSnapshots,
     focusView: focusView,
     removeHighlights: removeHighlights,
-    updateBackdrop: updateBackdrop,
+    refreshBackdrop: refreshBackdrop,
     updateViews: updateViews,
     updateDeviceFamily: updateDeviceFamily,
     updateOrientation: updateOrientation
@@ -500,7 +492,6 @@ $(document).ready(function() {
   }
 
 
-
   function refreshViewHeirarchy(){
     showLoadingUI();
 
@@ -536,7 +527,7 @@ $(document).ready(function() {
 
 	$('#dump_button').click( function(){
     refreshViewHeirarchy();
-    uiLocator.updateBackdrop();
+    uiLocator.refreshBackdrop();
   });
 
   $('button#flash').click( function(){
@@ -551,7 +542,7 @@ $(document).ready(function() {
       highlightViewLocations( $("input#query").val(), $("input#selector_engine").val() );
   });
   
-  liveView = symbiote.LiveView( uiLocator.updateBackdrop, refreshViewHeirarchy );
+  liveView = symbiote.LiveView( uiLocator.refreshBackdrop, refreshViewHeirarchy );
 
   $("#live-view button").click( function(){
     $(this).toggleClass('down');

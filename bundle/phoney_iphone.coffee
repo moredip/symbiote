@@ -47,7 +47,6 @@ createPhoneyPhone = (paper) ->
   backdrop = undefined
 
   refreshBackdrop = ()->
-    debugger
     backdrop.remove() if backdrop?
     backdrop = paper.image()
       .transform(backdropTransformer.desc())
@@ -75,7 +74,6 @@ createPhoneyPhone = (paper) ->
   refreshBackdrop: refreshBackdrop
   drawHighlightFrame: drawHighlightFrame
   addViewSnapshot: addViewSnapshot
-  updateBackdrop: updateBackdrop
 
 
 window.symbiote.createPhoneyPhone = createPhoneyPhone

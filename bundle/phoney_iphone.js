@@ -52,7 +52,7 @@
     backdropTransformer = drawStaticBackdropAndReturnTransformer(paper);
     backdrop = void 0;
     refreshBackdrop = function() {
-      debugger;      if (backdrop != null) {
+      if (backdrop != null) {
         backdrop.remove();
       }
       return backdrop = paper.image().transform(backdropTransformer.desc()).attr(BACKDROP_FRAME).attr('src', cacheBustUrl(SCREENSHOT_URL)).toFront();
@@ -76,8 +76,7 @@
     return {
       refreshBackdrop: refreshBackdrop,
       drawHighlightFrame: drawHighlightFrame,
-      addViewSnapshot: addViewSnapshot,
-      updateBackdrop: updateBackdrop
+      addViewSnapshot: addViewSnapshot
     };
   };
 
