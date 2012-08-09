@@ -18,94 +18,6 @@ symbiote.UiLocator = function(){
 
   paper.canvas.setAttribute('preserveAspectRatio','xMidYMin meet');
 
-  function iPhoneErsatz(raphael){
-    var BACKDROP_FRAME = { x: 0, y: 0, width: 320, height: 480 },
-        transformer,
-        backdropTransformer;
-
-    function drawFakeDevice(backdrop){
-      transformer = symbiote.transformStack();
-      
-      paper.canvas.setAttribute('width','100%');
-      paper.canvas.setAttribute('height','100%');
-      paper.canvas.setAttribute("viewBox", "0 0 380 720");
-
-      backdrop = paper.image();
-
-      transformer
-        .skew(0,15)
-        .translate(6,6);
-
-      // main outline of device
-      paper.rect( 0, 0, 360, 708, 40 ).attr( {
-          'fill': 'black',
-          'stroke': 'gray',
-          'stroke-width': 4,
-        }).transform( transformer.desc() )
-
-
-      // home button
-      transformer.push().translate(180,655);
-      paper.circle( 0, 0, 34 )
-        .transform( transformer.desc() )
-        .attr( 'fill', '90-#303030-#101010' );
-
-      // square inside home button
-      paper.rect( 0, 0, 22, 22, 5 ).attr({  
-        'stroke': 'gray',
-        'stroke-width': 2,
-      }).transform( transformer.push().translate(-11,-11).descAndPop() );
-
-      backdropTransformer = transformer.clone().translate(24,120).translate(-ISO_MAJOR_OFFSET,0);
-
-      if( backdrop ){
-        backdrop
-          .transform( backdropTransformer.desc() )
-          .attr( BACKDROP_FRAME ).toFront();
-      }
-    }
-
-    function matrixTransformedForView( matrix, origin, depth ){
-      return matrix.push()
-        .translate( origin.x, origin.y )
-        .translate( depth * -ISO_MINOR_OFFSET, 0 )
-        .descAndPop();
-    }
-
-    function addViewSnapshot(params){
-      var size = params.frame.size,
-          origin = params.frame.origin,
-          src = params.src,
-          depth = params.depth,
-          uid = params.uid;
-
-      return paper.image(src,0,0,size.width,size.height)
-         .transform( matrixTransformedForView( backdropTransformer, origin, depth ) );
-    }
-
-    function drawHighlightFrame( frame ){
-      return paper.rect( 
-        0, 0,
-        frame.size.width, 
-        frame.size.height
-      )
-      .attr({
-        fill: '#aaff00',
-        opacity: 0.8,
-        stroke: 'black',
-      })
-      .transform( backdropTransformer.push().translate( frame.origin.x, frame.origin.y ).descAndPop() );
-    }
-
-    return {
-      drawFakeDevice: drawFakeDevice,
-      drawHighlightFrame: drawHighlightFrame,
-      addViewSnapshot: addViewSnapshot,
-      screenOffset: function(){ return BACKDROP_FRAME; }
-    };
-
-  }
-
   function iPadErsatz(raphael){
     var BACKDROP_FRAME = { x: 55, y: 55, width: 768, height: 1024 };
 
@@ -180,10 +92,6 @@ symbiote.UiLocator = function(){
     highlightAccessibilityFrames( [frame] );
   }
 
-  function addBackdropImage(){
-    return paper.image();
-  }
-
   function eachViewSnapshot( fn ){
     _.each( imageViewsByUid, function(image,uid){
       fn( image );
@@ -245,7 +153,7 @@ symbiote.UiLocator = function(){
         erstaz = symbiote.createPhoneyPhone(paper);
       }
 
-      backdrop = addBackdropImage();
+      backdrop = paper.image();
       erstaz.updateBackdrop( backdrop );
     }
   }

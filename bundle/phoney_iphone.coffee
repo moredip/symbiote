@@ -2,6 +2,7 @@ ISO_SKEW = 15
 ISO_MAJOR_OFFSET = 50
 ISO_MINOR_OFFSET = 5
 BACKDROP_FRAME = { x: 0, y: 0, width: 320, height: 480 }
+SCREENSHOT_URL = symbiote.baseUrlFor( "screenshot" )
 
 drawStaticBackdropAndReturnTransformer = (paper) ->
   paper.canvas.setAttribute "width", "100%"
@@ -32,15 +33,29 @@ drawStaticBackdropAndReturnTransformer = (paper) ->
   transformer.translate(24, 120).translate(-ISO_MAJOR_OFFSET, 0)
   transformer
 
+
 matrixTransformedForView = (matrix, origin, depth) ->
   matrix.push().translate(origin.x, origin.y).translate(depth * -ISO_MINOR_OFFSET, 0).descAndPop()
 
 
+cacheBustUrl = (url)->
+  "#{url}?#{(new Date()).getTime()}"
+
+
 createPhoneyPhone = (paper) ->
   backdropTransformer = drawStaticBackdropAndReturnTransformer(paper)
+  backdrop = undefined
 
-  updateBackdrop = (backdrop)->
-    backdrop.transform(backdropTransformer.desc()).attr(BACKDROP_FRAME).toFront()
+  refreshBackdrop = ()->
+    debugger
+    backdrop.remove() if backdrop?
+    backdrop = paper.image()
+      .transform(backdropTransformer.desc())
+      .attr(BACKDROP_FRAME)
+      .attr( 'src', cacheBustUrl(SCREENSHOT_URL) )
+      .toFront()
+
+  refreshBackdrop()
 
   addViewSnapshot = ({frame,src,depth,uid}) ->
     {size,origin}=frame
@@ -57,6 +72,7 @@ createPhoneyPhone = (paper) ->
       stroke: "black"
     ).transform( backdropTransformer.push().translate(origin.x, origin.y).descAndPop() )
 
+  refreshBackdrop: refreshBackdrop
   drawHighlightFrame: drawHighlightFrame
   addViewSnapshot: addViewSnapshot
   updateBackdrop: updateBackdrop
