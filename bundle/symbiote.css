@@ -332,11 +332,11 @@ a#dump_button {
   vertical-align: middle;
 }
 
-#dom_dump {
+#dom-dump {
   padding: 0 10px 10px 10px;
 }
 
-div#dom_dump .treeview .hovered-in-locator { 
+div#dom-dump .treeview .hovered-in-locator { 
   color: #2aa198;
 }
 

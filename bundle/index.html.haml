@@ -13,6 +13,7 @@
     %script(src="backbone.js")
     %script(src="json2.js")
 
+    %script(data-main="/main" src="require.js")
 
     %link(href="reset.css" rel="stylesheet")
     %link(href="pictos/pictos.css" rel="stylesheet")
@@ -51,10 +52,10 @@
       #list-tabs
         %ul
           %li
-            %a(href="#dom_dump") View Heirarchy
+            %a(href="#dom-dump") View Heirarchy
           %li
             %a(href="#accessible-views-tab") Accessible Elements
-        #dom_dump
+        #dom-dump
           %ul
         #accessible-views-tab
           %div.hints
