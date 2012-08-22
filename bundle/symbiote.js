@@ -107,8 +107,6 @@ symbiote.UiLocator = function(){
     });
 
     if( image ){
-      console.log( 'focussing on', image );
-
       image.attr({ 
         opacity: 0.9
       });
@@ -208,20 +206,9 @@ $(document).ready(function() {
       $loading = $(''),
       INTERESTING_PROPERTIES = ['class', 'accessibilityLabel', 'tag', 'alpha', 'isHidden'],
       uiLocator = symbiote.UiLocator(),
-      liveView;
-
-
-  function domListItemForView(view){
-    var $found = null;
-    $('a',$domList).each(function(i,el){
-      var $el = $(el);
-      if( $el.data('rawView') === view ){
-        $found = $el;
-        return false;
-      }
-    });
-    return $found;
-  }
+      liveView,
+      viewTree,
+      viewLoader;
 
 	$("#list-tabs").tabs();
 	$("#inspect-tabs").tabs();
@@ -260,6 +247,10 @@ $(document).ready(function() {
     var $ul = $('<ul/>');
 
     function createListItem( propertyName, propertyValue, cssClass ){
+      if( propertyName === 'parent' ){
+        return;
+      }
+
       if( propertyValue === null ){
         propertyValue = 'null';
       }else if( typeof propertyValue === 'object' ){ 
@@ -294,60 +285,74 @@ $(document).ready(function() {
     $ul.appendTo( $domDetails );
   }
 
-  function treeElementSelected(){
-    var $this = $(this),
-        selectedView = $this.data('rawView');
-    displayDetailsFor( selectedView );
-    selectViewDetailsTab();
-
-    $('a',$domList).removeClass('selected');
-    $this.addClass('selected');
+  var controller = {
+    displayDetailsFor: displayDetailsFor,
+    selectViewDetailsTab: selectViewDetailsTab
   }
 
-  function treeElementEntered(){
-    var view = $(this).data('rawView');
-    //uiLocator.highlightAccessibilityFrame( view.accessibilityFrame );
-    uiLocator.focusView( view.uid );
-  }
+  viewTree = symbiote.createViewTree( $domList )
+  viewLoader = symbiote.createViewLoader( uiLocator, viewTree, controller );
 
-  function treeElementLeft(){
-    uiLocator.removeHighlights();
-  }
+  //function treeElementSelected(){
+    //var $this = $(this),
+        //selectedView = $this.data('rawView');
 
-  function listItemTitleFor( rawView ) {
-    var title = ""+rawView['class'];
-    if( rawView.accessibilityLabel ) {
-      return title + ": '"+rawView.accessibilityLabel+"'";
-    }else{
-      return title;
-    }
-  }
+    //bean.fire(selectedView,'selected');
 
-  function transformDumpedViewToListItem( rawView ) {
-    var title = listItemTitleFor( rawView ),
-        viewListItem = $("<li><a>"+title+"</a></li>"),
-        subviewList = $("<ul/>");
+    //displayDetailsFor( selectedView );
+    //selectViewDetailsTab();
 
-    $('a',viewListItem).data( 'rawView', rawView );
+    //$('a',$domList).removeClass('selected');
+    //$this.addClass('selected');
+  //}
 
-    _.each( rawView.subviews, function(subview) {
-      subviewList.append( transformDumpedViewToListItem( subview ) );
-    });
+  //function treeElementEntered(){
+    //var view = $(this).data('rawView');
+    //bean.fire(view,'hoverenter');
+    ////uiLocator.highlightAccessibilityFrame( view.accessibilityFrame );
+    //uiLocator.focusView( view.uid );
+  //}
+
+  //function treeElementLeft(){
+    //var view = $(this).data('rawView');
+    //bean.fire(view,'hoverleave');
+    //uiLocator.removeHighlights();
+  //}
+
+  //function listItemTitleFor( rawView ) {
+    //var title = ""+rawView['class'];
+    //if( rawView.accessibilityLabel ) {
+      //return title + ": '"+rawView.accessibilityLabel+"'";
+    //}else{
+      //return title;
+    //}
+  //}
+
+  //function transformDumpedViewToListItem( rawView ) {
+    //var title = listItemTitleFor( rawView ),
+        //viewListItem = $("<li><a>"+title+"</a></li>"),
+        //subviewList = $("<ul/>");
+
+    //$('a',viewListItem).data( 'rawView', rawView );
+
+    //_.each( rawView.subviews, function(subview) {
+      //subviewList.append( transformDumpedViewToListItem( subview ) );
+    //});
     
-    viewListItem.append( subviewList );
-    return viewListItem; 
-  }
+    //viewListItem.append( subviewList );
+    //return viewListItem; 
+  //}
 
-  function updateDumpView( data ) {
-    $domList.children().remove();
-    $domList.append( transformDumpedViewToListItem( data ) );
-    $('a', $domList ).bind( 'click', treeElementSelected );
-    $('a', $domList ).bind( 'mouseenter', treeElementEntered );
-    $('a', $domList ).bind( 'mouseleave', treeElementLeft );
-    $domList.treeview({
-                 collapsed: false
-                 });
-  }
+  //function updateDumpView( data ) {
+    //$domList.children().remove();
+    //$domList.append( transformDumpedViewToListItem( data ) );
+    //$('a', $domList ).bind( 'click', treeElementSelected );
+    //$('a', $domList ).bind( 'mouseenter', treeElementEntered );
+    //$('a', $domList ).bind( 'mouseleave', treeElementLeft );
+    //$domList.treeview({
+                 //collapsed: false
+                 //});
+  //}
 
   function flattenViews( rootView ) {
 
@@ -495,6 +500,8 @@ $(document).ready(function() {
   function refreshViewHeirarchy(){
     showLoadingUI();
 
+    viewLoader.update();
+
     refreshOrientation();
 
     $.ajax({
@@ -510,7 +517,6 @@ $(document).ready(function() {
 
         console.debug( 'device appears to be an '+deviceFamily );
 
-        updateDumpView( data );
         updateAccessibleViews( allViews );
         uiLocator.updateDeviceFamily( deviceFamily );
         uiLocator.updateViews( allViews );
@@ -554,8 +560,7 @@ $(document).ready(function() {
   });
 
   $("#asploder button").click( function(){
-    viewLoader = symbiote.createViewLoader( uiLocator );
-    viewLoader.update();
+
   });
 
   $('#ui-locator-rotator').click( function(){

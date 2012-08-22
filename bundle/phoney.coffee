@@ -13,25 +13,41 @@ requestSnapshotRefresh = ->
 snapshotUrlForView = (view)->
   symbiote.baseUrlFor( "/screenshot/view-snapshot/#{view.uid}?#{(new Date()).getTime()}" )
 
-createViewLoader = ( ui )->
+createViewLoader = ( ui, tree, controller )->
+  onViewHovered = (view)->
+    console.log( 'hover', view )
+  onViewUnhovered = (view)->
+    console.log( 'done', view )
 
-  processView = (view, depth)->
-    view.depth = depth;
+  processView = (view, parent, depth)->
+    view.parent = parent
+    view.depth = depth
+
+    bean.add view, 'hoverenter', -> onViewHovered(view)
+    bean.add view, 'hoverleave', -> onViewUnhovered(view)
+
+    bean.add view, 'selected', ->
+      view = this
+      controller.displayDetailsFor(view)
+      controller.selectViewDetailsTab()
+
     ui.addViewSnapshot
       src: snapshotUrlForView(view)
       depth: depth
       frame: view.accessibilityFrame
       uid: view.uid
 
-  processViewPlusSubviews = (view, depth)->
-    processView(view, depth)
-    processViewPlusSubviews(subview,depth+1) for subview in view.subviews
+  processViewPlusSubviews = (view, parent, depth)->
+    processView(view, parent, depth)
+    processViewPlusSubviews(subview,view,depth+1) for subview in view.subviews
 
   update = ->
     $.when( requestSnapshotRefresh(), fetchViewHeirarchy() ).done (_, viewHeirResponse)->
       viewHeir = viewHeirResponse[0]
+      tree.reload(viewHeir)
+
       ui.resetViewSnapshots()
-      processViewPlusSubviews( viewHeir, 0 )
+      processViewPlusSubviews( viewHeir, undefined, 0 )
 
   {
     update: update
