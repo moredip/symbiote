@@ -8,7 +8,6 @@ define ['view_heir_model'],(ViewHeirModel)->
 
     $a: -> @$( '> a' )
 
-
     render: ->
       $childList = $("<ul/>")
 
@@ -18,6 +17,9 @@ define ['view_heir_model'],(ViewHeirModel)->
 
       @$el.append("<a>#{@model.getDesc()}</a>").append($childList)
 
+      # have to do this by hand rather than with events property
+      # because BB doesn't appear to let you bind to just immediate
+      # descendants using e.g. "mouseenter > a"
       @$a()
         .on( 'mouseenter', => @model.set('active',true) )
         .on( 'mouseleave', => @model.set('active',false) )

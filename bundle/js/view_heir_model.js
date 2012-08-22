@@ -35,6 +35,9 @@
           });
           return _this.trigger('selected-view-changed', selectedViewModel);
         });
+        allViews.on('accessible-selected', function(viewModel) {
+          return _this.trigger('accessible-view-selected', viewModel);
+        });
         this.set('root', rootViewModel);
         return this.set('allViews', allViews);
       }

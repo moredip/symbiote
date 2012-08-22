@@ -1,6 +1,10 @@
 define ->
   AccessibleViewItemView = Backbone.View.extend
     tagName: 'div'
+
+    events: 
+      "click": "clicked"
+
     render: ->
       @$el.empty().append( """
         <a href="#" title="#{@model.getShelleySelector()}">
@@ -12,6 +16,8 @@ define ->
       @
       
 
+    clicked: ->
+      @model.trigger( 'accessible-selected', @model )
   
   AccessibleViewsView = Backbone.View.extend
     el: $('#accessible-views')

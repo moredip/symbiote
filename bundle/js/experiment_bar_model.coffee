@@ -1,0 +1,3 @@
+define ->
+  ExperimentBarModel = Backbone.Model
+

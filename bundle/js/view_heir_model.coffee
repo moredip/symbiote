@@ -27,6 +27,9 @@ define ['view_model'], (ViewModel)->
         allViews.each (viewModel)->
           viewModel.set('selected',viewModel == selectedViewModel)
         @trigger( 'selected-view-changed', selectedViewModel )
+
+      allViews.on 'accessible-selected', (viewModel)=>
+        @trigger( 'accessible-view-selected', viewModel )
       
       @set( 'root', rootViewModel )
       @set( 'allViews', allViews )

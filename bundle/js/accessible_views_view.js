@@ -4,9 +4,15 @@
     var AccessibleViewItemView, AccessibleViewsView;
     AccessibleViewItemView = Backbone.View.extend({
       tagName: 'div',
+      events: {
+        "click": "clicked"
+      },
       render: function() {
         this.$el.empty().append("<a href=\"#\" title=\"" + (this.model.getShelleySelector()) + "\">\n  <span class=\"viewClass\">" + (this.model.get('class')) + "</span>\n  with label\n  \"<span class=\"viewLabel\">" + (this.model.get('accessibilityLabel')) + "</span>\"\n</a>");
         return this;
+      },
+      clicked: function() {
+        return this.model.trigger('accessible-selected', this.model);
       }
     });
     AccessibleViewsView = Backbone.View.extend({
