@@ -4,6 +4,12 @@
     var TreeNodeView, TreeView;
     TreeNodeView = Backbone.View.extend({
       tagName: 'li',
+      initialize: function() {
+        return this.model.on('change:selected', _.bind(this.refreshSelectedness, this));
+      },
+      $a: function() {
+        return this.$('> a');
+      },
       render: function() {
         var $childList, child, childView, _i, _len, _ref,
           _this = this;
@@ -17,12 +23,22 @@
           $childList.append(childView.render().el);
         }
         this.$el.append("<a>" + (this.model.getDesc()) + "</a>").append($childList);
-        this.$('> a').on('mouseenter', function() {
+        this.$a().on('mouseenter', function() {
           return _this.model.set('active', true);
         }).on('mouseleave', function() {
           return _this.model.set('active', false);
+        }).on('click', function() {
+          return _this.model.trigger('selected', _this.model);
         });
+        this.refreshSelectedness();
         return this;
+      },
+      refreshSelectedness: function() {
+        if (this.model.get('selected')) {
+          return this.$a().addClass('selected');
+        } else {
+          return this.$a().removeClass('selected');
+        }
       }
     });
     return TreeView = Backbone.View.extend({

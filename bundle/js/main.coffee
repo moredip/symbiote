@@ -1,4 +1,4 @@
-require ['controller','tree_view','ersatz_view','details_view'], (createController,TreeView,ErsatzView,DetailsView)->
+require ['controller','tabs_controller','tree_view','ersatz_view','details_view'], (createMainController,createTabsController,TreeView,ErsatzView,DetailsView)->
   $ ->
 
     $("#list-tabs").tabs();
@@ -12,7 +12,14 @@ require ['controller','tree_view','ersatz_view','details_view'], (createControll
 
     detailsView = new DetailsView()
 
-    controller = createController( treeView, ersatzView, detailsView )
-    controller.boot()
+    tabsController = createTabsController( $("#list-tabs"), $("#inspect-tabs") );
+
+    mainController = createMainController( 
+      treeView: treeView
+      ersatzView: ersatzView
+      detailsView: detailsView
+      tabsController: tabsController
+    )
+    mainController.boot()
 
 

@@ -1,8 +1,8 @@
 (function() {
 
-  require(['controller', 'tree_view', 'ersatz_view', 'details_view'], function(createController, TreeView, ErsatzView, DetailsView) {
+  require(['controller', 'tabs_controller', 'tree_view', 'ersatz_view', 'details_view'], function(createMainController, createTabsController, TreeView, ErsatzView, DetailsView) {
     return $(function() {
-      var controller, detailsView, ersatzView, treeView;
+      var detailsView, ersatzView, mainController, tabsController, treeView;
       $("#list-tabs").tabs();
       $("#inspect-tabs").tabs();
       treeView = new TreeView();
@@ -10,8 +10,14 @@
       ersatzView.iso_skew = 0;
       ersatzView.render();
       detailsView = new DetailsView();
-      controller = createController(treeView, ersatzView, detailsView);
-      return controller.boot();
+      tabsController = createTabsController($("#list-tabs"), $("#inspect-tabs"));
+      mainController = createMainController({
+        treeView: treeView,
+        ersatzView: ersatzView,
+        detailsView: detailsView,
+        tabsController: tabsController
+      });
+      return mainController.boot();
     });
   });
 

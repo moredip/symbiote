@@ -18,7 +18,11 @@ define ['view_model'], (ViewModel)->
       allViews.on 'change:active', (viewModel)=>
         if viewModel.get('active')
           @trigger( 'active-view-changed', viewModel )
-          console.log( viewModel.getDesc(), 'is hot' )
+
+      allViews.on 'selected', (selectedViewModel)=>
+        allViews.each (viewModel)->
+          viewModel.set('selected',viewModel == selectedViewModel)
+        @trigger( 'selected-view-changed', selectedViewModel )
       
       @set( 'root', rootViewModel )
       @set( 'allViews', allViews )

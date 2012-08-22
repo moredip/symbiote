@@ -21,9 +21,14 @@
         allViews = new ViewCollection(flatten(rootViewModel));
         allViews.on('change:active', function(viewModel) {
           if (viewModel.get('active')) {
-            _this.trigger('active-view-changed', viewModel);
-            return console.log(viewModel.getDesc(), 'is hot');
+            return _this.trigger('active-view-changed', viewModel);
           }
+        });
+        allViews.on('selected', function(selectedViewModel) {
+          allViews.each(function(viewModel) {
+            return viewModel.set('selected', viewModel === selectedViewModel);
+          });
+          return _this.trigger('selected-view-changed', selectedViewModel);
         });
         this.set('root', rootViewModel);
         return this.set('allViews', allViews);

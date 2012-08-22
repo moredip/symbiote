@@ -3,6 +3,12 @@ define ['view_heir_model'],(ViewHeirModel)->
   TreeNodeView = Backbone.View.extend
     tagName: 'li'
 
+    initialize: ->
+      @model.on 'change:selected', _.bind( @refreshSelectedness, @ ) 
+
+    $a: -> @$( '> a' )
+
+
     render: ->
       $childList = $("<ul/>")
 
@@ -12,11 +18,20 @@ define ['view_heir_model'],(ViewHeirModel)->
 
       @$el.append("<a>#{@model.getDesc()}</a>").append($childList)
 
-      @$( '> a' )
+      @$a()
         .on( 'mouseenter', => @model.set('active',true) )
         .on( 'mouseleave', => @model.set('active',false) )
+        .on( 'click', => @model.trigger('selected',@model) )
 
+      @refreshSelectedness()
       @
+
+    refreshSelectedness: ->
+      if @model.get('selected')
+        @$a().addClass('selected')
+      else
+        @$a().removeClass('selected')
+
 
 
 
