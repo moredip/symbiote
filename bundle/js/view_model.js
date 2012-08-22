@@ -32,6 +32,13 @@
         } else {
           return viewClass;
         }
+      },
+      getShelleySelector: function() {
+        if (this.has('accessibilityLabel')) {
+          return "view:'" + (this.get('class')) + "' marked:'" + (this.get('accessibilityLabel')) + "'";
+        } else {
+          return false;
+        }
       }
     });
     return ViewModel;

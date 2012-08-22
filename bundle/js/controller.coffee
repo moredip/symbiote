@@ -1,6 +1,11 @@
 define ['frank'],(frank)->
 
-  createController = ({treeView,ersatzView,detailsView,tabsController})->
+  createController = ({
+    treeView,
+    ersatzView,
+    detailsView,
+    accessibleViewsView,
+    tabsController})->
 
     treeView.model.on 'active-view-changed', (viewModel)->
 
@@ -11,6 +16,9 @@ define ['frank'],(frank)->
     boot = ->
       frank.fetchViewHeirarchy().done (rawHeir)->
         treeView.model.resetViewHeir(rawHeir)
+
+        accessibleViews = treeView.model.getAccessibleViews()
+        accessibleViewsView.collection.reset( accessibleViews )
 
         #ersatzView.model = newViewHeir
 

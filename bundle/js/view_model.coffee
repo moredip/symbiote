@@ -17,5 +17,10 @@ define ->
       else
         viewClass
 
+    getShelleySelector: ->
+      if @has('accessibilityLabel')
+        "view:'#{@get('class')}' marked:'#{@get('accessibilityLabel')}'"
+      else
+        false
 
   ViewModel

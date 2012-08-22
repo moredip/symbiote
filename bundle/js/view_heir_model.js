@@ -14,6 +14,11 @@
       return flattenedViewModels;
     };
     ViewHeirModel = Backbone.Model.extend({
+      getAccessibleViews: function() {
+        return this.get('allViews').filter(function(viewModel) {
+          return viewModel.has('accessibilityLabel');
+        });
+      },
       resetViewHeir: function(rawRootView) {
         var allViews, rootViewModel,
           _this = this;
