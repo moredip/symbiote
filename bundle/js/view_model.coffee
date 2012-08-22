@@ -11,5 +11,12 @@ define ->
       @set( rawChildren:attributes.children )
       @set( children: childModels )
 
+    getDesc: ->
+      viewClass = @get('class')
+      if label = @get('accessibilityLabel')
+        "#{viewClass}: #{label}"
+      else
+        viewClass
+
 
   ViewModel

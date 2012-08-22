@@ -4,17 +4,9 @@
     var TreeNodeView, TreeView;
     TreeNodeView = Backbone.View.extend({
       tagName: 'li',
-      title: function() {
-        var label, viewClass;
-        viewClass = this.model.get('class');
-        if (label = this.model.get('accessibilityLabel')) {
-          return "" + viewClass + ": " + label;
-        } else {
-          return viewClass;
-        }
-      },
       render: function() {
-        var $childList, child, childView, _i, _len, _ref;
+        var $childList, child, childView, _i, _len, _ref,
+          _this = this;
         $childList = $("<ul/>");
         _ref = this.model.get('children');
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -24,7 +16,12 @@
           });
           $childList.append(childView.render().el);
         }
-        this.$el.append("<a>" + (this.title()) + "</a>").append($childList);
+        this.$el.append("<a>" + (this.model.getDesc()) + "</a>").append($childList);
+        this.$('> a').on('mouseenter', function() {
+          return _this.model.set('active', true);
+        }).on('mouseleave', function() {
+          return _this.model.set('active', false);
+        });
         return this;
       }
     });

@@ -3,13 +3,6 @@ define ['view_heir_model'],(ViewHeirModel)->
   TreeNodeView = Backbone.View.extend
     tagName: 'li'
 
-    title: ->
-      viewClass = @model.get('class')
-      if label = @model.get('accessibilityLabel')
-        "#{viewClass}: #{label}"
-      else
-        viewClass
-
     render: ->
       $childList = $("<ul/>")
 
@@ -17,7 +10,12 @@ define ['view_heir_model'],(ViewHeirModel)->
         childView = new TreeNodeView( model: child )
         $childList.append( childView.render().el )
 
-      @$el.append("<a>#{@title()}</a>").append($childList)
+      @$el.append("<a>#{@model.getDesc()}</a>").append($childList)
+
+      @$( '> a' )
+        .on( 'mouseenter', => @model.set('active',true) )
+        .on( 'mouseleave', => @model.set('active',false) )
+
       @
 
 

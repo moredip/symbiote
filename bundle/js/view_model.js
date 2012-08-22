@@ -26,6 +26,15 @@
         return this.set({
           children: childModels
         });
+      },
+      getDesc: function() {
+        var label, viewClass;
+        viewClass = this.get('class');
+        if (label = this.get('accessibilityLabel')) {
+          return "" + viewClass + ": " + label;
+        } else {
+          return viewClass;
+        }
       }
     });
     return ViewModel;

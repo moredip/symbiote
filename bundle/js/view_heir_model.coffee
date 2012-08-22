@@ -13,7 +13,11 @@ define ['view_model'], (ViewModel)->
   Backbone.Model.extend
     resetViewHeir: (rawRootView)->
       rootViewModel = new ViewModel(rawRootView) 
-      allViewModels = flatten( rootViewModel )
+      allViews = new ViewCollection( flatten( rootViewModel ) )
+
+      allViews.on 'change:active', (viewModel)->
+        if viewModel.get('active')
+          console.log( viewModel.getDesc(), 'is hot' )
       
       @set( 'root', rootViewModel )
-      @set( 'allViews', new ViewCollection(allViewModels) )
+      @set( 'allViews', allViews )

@@ -15,11 +15,16 @@
     };
     return Backbone.Model.extend({
       resetViewHeir: function(rawRootView) {
-        var allViewModels, rootViewModel;
+        var allViews, rootViewModel;
         rootViewModel = new ViewModel(rawRootView);
-        allViewModels = flatten(rootViewModel);
+        allViews = new ViewCollection(flatten(rootViewModel));
+        allViews.on('change:active', function(viewModel) {
+          if (viewModel.get('active')) {
+            return console.log(viewModel.getDesc(), 'is hot');
+          }
+        });
         this.set('root', rootViewModel);
-        return this.set('allViews', new ViewCollection(allViewModels));
+        return this.set('allViews', allViews);
       }
     });
   });
