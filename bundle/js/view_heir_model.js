@@ -1,7 +1,7 @@
 (function() {
 
   define(['view_model'], function(ViewModel) {
-    var ViewCollection, flatten;
+    var ViewCollection, ViewHeirModel, flatten;
     ViewCollection = Backbone.Collection;
     flatten = function(rootViewModel) {
       var childViewModel, flattenedViewModels, _i, _len, _ref;
@@ -13,13 +13,15 @@
       }
       return flattenedViewModels;
     };
-    return Backbone.Model.extend({
+    ViewHeirModel = Backbone.Model.extend({
       resetViewHeir: function(rawRootView) {
-        var allViews, rootViewModel;
+        var allViews, rootViewModel,
+          _this = this;
         rootViewModel = new ViewModel(rawRootView);
         allViews = new ViewCollection(flatten(rootViewModel));
         allViews.on('change:active', function(viewModel) {
           if (viewModel.get('active')) {
+            _this.trigger('active-view-changed', viewModel);
             return console.log(viewModel.getDesc(), 'is hot');
           }
         });
@@ -27,6 +29,7 @@
         return this.set('allViews', allViews);
       }
     });
+    return ViewHeirModel;
   });
 
 }).call(this);

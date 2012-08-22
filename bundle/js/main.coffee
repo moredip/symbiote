@@ -1,4 +1,4 @@
-require ['controller','tree_view','ersatz_view'], (createController,TreeView,ErsatzView)->
+require ['controller','tree_view','ersatz_view','details_view'], (createController,TreeView,ErsatzView,DetailsView)->
   $ ->
 
     $("#list-tabs").tabs();
@@ -10,7 +10,9 @@ require ['controller','tree_view','ersatz_view'], (createController,TreeView,Ers
     ersatzView.iso_skew = 0
     ersatzView.render()
 
-    controller = createController( treeView, ersatzView )
+    detailsView = new DetailsView()
+
+    controller = createController( treeView, ersatzView, detailsView )
     controller.boot()
 
 

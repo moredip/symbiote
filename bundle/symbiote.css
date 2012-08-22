@@ -257,7 +257,7 @@ ul#selector_engine_options.shown {
 .landscape #list-tabs { right: 50%; }
 
 
-#list-tabs > div, #dom_detail {
+#list-tabs > div, #dom-detail {
   position: absolute;
   top: 40px;
   right: 0;
@@ -340,14 +340,14 @@ div#dom-dump .treeview .hovered-in-locator {
   color: #2aa198;
 }
 
-#dom_detail, #accessible-views-tab { padding: 10px; }
+#dom-detail, #accessible-views-tab { padding: 10px; }
 
-#dom_detail {
+#dom-detail {
   font-size:0.8em;
   word-break: break-word;
 }
 
-#dom_detail li {
+#dom-detail li {
   padding: 6px 0;
   border-top: 2px solid rgba(255,255,255, .7);
   border-bottom: 1px solid rgba(0, 0, 0, .2);
@@ -355,24 +355,24 @@ div#dom-dump .treeview .hovered-in-locator {
      -moz-transition: background-color .1s;
           transition: background-color .1s;
 }
-#dom_detail li:first-child { border-top: none; }
-#dom_detail li:last-child { border-bottom: none; }
+#dom-detail li:first-child { border-top: none; }
+#dom-detail li:last-child { border-bottom: none; }
 
-#dom_detail li:hover {
+#dom-detail li:hover {
   background-color: rgba(255,255,255, .4);
 }
 
-#dom_detail .key {
+#dom-detail .key {
   font-size: 1.5em;
 }
 
-#dom_detail .value:before {
+#dom-detail .value:before {
   content: "\21b3";
   padding-left: 2px;
   color: #999;
 }
 
-#dom_detail .interesting {
+#dom-detail .interesting {
   font-weight: bold;
 }
 

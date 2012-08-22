@@ -20,9 +20,6 @@
           }
           return _results;
         }).call(this);
-        this.set({
-          rawChildren: attributes.children
-        });
         return this.set({
           children: childModels
         });
