@@ -1,3 +1,7 @@
 define ->
-  ExperimentBarModel = Backbone.Model
+  ExperimentBarModel = Backbone.Model.extend
+    defaults:
+      engines: ['shelley_compat','uiquery']
+      selectedEngine: 'shelley_compat'
+      selector: ''
 

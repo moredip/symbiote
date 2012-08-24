@@ -15,6 +15,9 @@
           selector: viewModel.getShelleySelector()
         });
       });
+      experimentBarModel.on('flash-clicked', function() {
+        return frank.sendFlashCommand(experimentBarModel.get('selector'), experimentBarModel.get('engine'));
+      });
       boot = function() {
         return frank.fetchViewHeirarchy().done(function(rawHeir) {
           var accessibleViews;

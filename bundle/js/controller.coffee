@@ -17,6 +17,14 @@ define ['frank'],(frank)->
     treeView.model.on 'accessible-view-selected', (viewModel)->
       experimentBarModel.set( selector: viewModel.getShelleySelector() )
 
+
+    experimentBarModel.on 'flash-clicked', ->
+      frank.sendFlashCommand( 
+        experimentBarModel.get('selector'), 
+        experimentBarModel.get('engine')
+      )
+
+
     boot = ->
       frank.fetchViewHeirarchy().done (rawHeir)->
         treeView.model.resetViewHeir(rawHeir)

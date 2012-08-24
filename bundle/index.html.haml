@@ -31,22 +31,9 @@
     %section.symbiote_shell
       %article#selector-test
         %input#query(placeholder="Selector label marked:'Search'")
-        .action-buttons
-          %button#highlight Highlight
-          %ul.extra-actions
-            %li
-              %button#touch Touch In App
-            %li
-              %button#flash Flash In App
-          %div.drop-indicator v
-        .selector_engine
-          %input#selector_engine(value="shelley_compat")
-          %button#selector_engine_dropdown &#x25BC; 
-          %ul#selector_engine_options
-            %li shelley_compat
-            %li uiquery
-
-
+        .action-buttons.dropdown
+        selector engine:
+        .selector-engine.dropdown
 
     %section.the-columns
       #list-tabs
