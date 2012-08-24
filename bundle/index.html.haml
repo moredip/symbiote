@@ -30,10 +30,17 @@
 
     %section.symbiote_shell
       %article#selector-test
-        %input#query(placeholder="Selector label marked:'Search'")
-        .action-buttons.dropdown
-        selector engine:
+        %label.selector-engine-label
+          use &rarr;
         .selector-engine.dropdown
+
+        %label
+        to select views that match &rarr;
+        %input#query(placeholder="Selector label marked:'Search'")
+
+        %label
+          and then &rarr;
+        .action-buttons.dropdown
 
     %section.the-columns
       #list-tabs

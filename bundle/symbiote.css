@@ -114,56 +114,6 @@ button:active { background: #999; }
   width: 13em;
 }
 
-div.selector_engine {
-  position: relative;
-	display: inline-block;
-}
-
-/*
- * CSS transition jujitsu courtesy of
- * http://www.greywyvern.com/?post=337
- */
-
-ul#selector_engine_options {
-	position: absolute;
-	top: 30px;
-  width: 15em;
-  padding: 0 10px;
-	background: #ccc;
-	z-index: 1;
-
-  -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
-  -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0, .7);
-     -moz-box-shadow: 0 1px 3px 0 rgba(0,0,0, .7);
-          box-shadow: 0 1px 3px 0 rgba(0,0,0, .7);
-
-	opacity: 0;
-  visibility:hidden;
-  -webkit-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
-  	 -moz-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
-  		 -o-transition: visibility 0s linear 0.2s,opacity 0.2s linear;
-					transition: visibility 0s linear 0.2s,opacity 0.2s linear;
-}
-ul#selector_engine_options.shown {
-  opacity: 1;
-  visibility:visible;
-  transition-delay:0s;
-  -webkit-transition-delay:0s;
-  -moz-transition-delay:0s;
-  -o-transition-delay:0s;
-}
-#selector_engine_options li {
-	padding: 5px 0;
-	cursor: pointer;
-  position: relative;
-  text-align: left;
-}
-#selector_engine_options li:not(:first-of-type){ border-top: 2px solid rgba(255,255,255, .2); }
-#selector_engine_options li:not(:last-of-type){ border-bottom: 1px solid rgba(0,0,0, .3); }
-
-
 .dropdown {
   position: relative;
 	display: inline-block;
@@ -217,11 +167,18 @@ ul#selector_engine_options.shown {
 }
 
 .dropdown button {
-  padding: 8px 2em 8px 0.5em;
+  padding: 8px 2em 8px 0.8em;
 }
 
-.action-buttons {
-  width: 10em;
+.action-buttons button {
+  width: 9.2em;
+}
+.selector-engine button {
+  width: 7.2em;
+}
+
+.selector-engine-label {
+  padding-left: 1em;
 }
 
 /*.action-buttons {*/
