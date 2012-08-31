@@ -1,13 +1,15 @@
 (function() {
 
-  define(function() {
+  define(["frank"], function(frank) {
     var ViewModel;
     ViewModel = Backbone.Model.extend({
       defaults: {
-        parent: void 0
+        parent: void 0,
+        depth: 0
       },
       initialize: function(attributes) {
-        var childModels, subview;
+        var childDepth, childModels, subview;
+        childDepth = attributes.depth + 1;
         childModels = (function() {
           var _i, _len, _ref, _results;
           _ref = attributes.subviews;
@@ -15,7 +17,8 @@
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             subview = _ref[_i];
             _results.push(new ViewModel(_.extend(subview, {
-              parent: this
+              parent: this,
+              depth: childDepth
             })));
           }
           return _results;
@@ -39,6 +42,9 @@
         } else {
           return false;
         }
+      },
+      getSnapshotUrl: function() {
+        return frank.snapshotUrlForViewWithUid(this.get('uid'));
       }
     });
     return ViewModel;

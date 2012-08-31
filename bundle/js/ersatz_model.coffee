@@ -8,10 +8,17 @@ define ["frank"], (frank)->
       @set('allViews',views)
 
     refreshBaseScreenshot: ->
-      cacheBuster = "?#{(new Date()).getTime()}"
-      @set('baseScreenshotUrl', frank.baseScreenshotUrl()+cacheBuster)
+      @set('baseScreenshotUrl',frank.baseScreenshotUrl())
 
     toggleAsploded: ->
       isAsploded = !(@get('isAsploded'))
       @set('isAsploded',isAsploded)
+      if isAsploded
+        @updateAsplodedViews()
+
       isAsploded
+
+    updateAsplodedViews: ()->
+      frank.requestSnapshotRefresh().done =>
+        @trigger('snapshots-refreshed',@)
+      

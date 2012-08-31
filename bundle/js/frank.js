@@ -1,5 +1,9 @@
 (function() {
-  var baseUrlFor, displayErrorResponse, fetchViewHeirarchy, isErrorResponse, requestSnapshotRefresh, sendMapRequest;
+  var baseUrlFor, cacheBust, displayErrorResponse, fetchViewHeirarchy, isErrorResponse, requestSnapshotRefresh, sendMapRequest;
+
+  cacheBust = function(url) {
+    return "" + url + "?" + ((new Date()).getTime());
+  };
 
   baseUrlFor = function(path) {
     return window.location.protocol + "//" + window.location.host + "/" + path;
@@ -68,7 +72,10 @@
       fetchViewHeirarchy: fetchViewHeirarchy,
       requestSnapshotRefresh: requestSnapshotRefresh,
       baseScreenshotUrl: function() {
-        return baseUrlFor('/screenshot');
+        return cacheBust(baseUrlFor('/screenshot'));
+      },
+      snapshotUrlForViewWithUid: function(uid) {
+        return cacheBust(baseUrlFor("/screenshot/view-snapshot/" + uid));
       },
       sendFlashCommand: function(selector, engine) {
         return sendMapRequest({

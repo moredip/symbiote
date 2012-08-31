@@ -10,15 +10,22 @@
         return this.set('allViews', views);
       },
       refreshBaseScreenshot: function() {
-        var cacheBuster;
-        cacheBuster = "?" + ((new Date()).getTime());
-        return this.set('baseScreenshotUrl', frank.baseScreenshotUrl() + cacheBuster);
+        return this.set('baseScreenshotUrl', frank.baseScreenshotUrl());
       },
       toggleAsploded: function() {
         var isAsploded;
         isAsploded = !(this.get('isAsploded'));
         this.set('isAsploded', isAsploded);
+        if (isAsploded) {
+          this.updateAsplodedViews();
+        }
         return isAsploded;
+      },
+      updateAsplodedViews: function() {
+        var _this = this;
+        return frank.requestSnapshotRefresh().done(function() {
+          return _this.trigger('snapshots-refreshed', _this);
+        });
       }
     });
   });

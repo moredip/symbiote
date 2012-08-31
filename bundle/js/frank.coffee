@@ -1,3 +1,5 @@
+cacheBust = (url)-> "#{url}?#{(new Date()).getTime()}"
+
 baseUrlFor = (path)->
   window.location.protocol + "//" + window.location.host + "/" + path
 
@@ -50,10 +52,15 @@ sendMapRequest = ({selector, engine, methodName, methodArgs} )->
   })
   deferable.promise()
 
+
+
 define ->
   fetchViewHeirarchy: fetchViewHeirarchy
   requestSnapshotRefresh: requestSnapshotRefresh
-  baseScreenshotUrl: -> baseUrlFor('/screenshot')
+  baseScreenshotUrl: -> 
+    cacheBust( baseUrlFor('/screenshot') )
+  snapshotUrlForViewWithUid: (uid)-> 
+    cacheBust( baseUrlFor( "/screenshot/view-snapshot/#{uid}" ) )
   sendFlashCommand: (selector,engine)-> 
     sendMapRequest( 
       selector:selector, 

@@ -1,12 +1,14 @@
-define ->
+define ["frank"], (frank)->
 
   ViewModel = Backbone.Model.extend
     defaults:
       parent: undefined
+      depth: 0
 
     initialize: (attributes)->
+      childDepth = attributes.depth + 1
       childModels = for subview in attributes.subviews
-        new ViewModel( _.extend( subview, {parent:@} ) )
+        new ViewModel( _.extend( subview, {parent:@,depth:childDepth} ) )
 
       @set( children: childModels )
 
@@ -22,5 +24,8 @@ define ->
         "view:'#{@get('class')}' marked:'#{@get('accessibilityLabel')}'"
       else
         false
+
+    getSnapshotUrl: ->
+      frank.snapshotUrlForViewWithUid(@get('uid'))
 
   ViewModel
