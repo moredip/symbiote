@@ -1,9 +1,5 @@
 require ['controller','tabs_controller','tree_view','ersatz_view','details_view', 'accessible_views_view','experiment_bar_view'], (createMainController,createTabsController,TreeView,ErsatzView,DetailsView,AccessibleViewsView,ExperimentBarView)->
   $ ->
-
-    $("#list-tabs").tabs();
-    $("#inspect-tabs").tabs();
-
     treeView = new TreeView()
 
     ersatzView = new ErsatzView()

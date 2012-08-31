@@ -3,8 +3,6 @@
   require(['controller', 'tabs_controller', 'tree_view', 'ersatz_view', 'details_view', 'accessible_views_view', 'experiment_bar_view'], function(createMainController, createTabsController, TreeView, ErsatzView, DetailsView, AccessibleViewsView, ExperimentBarView) {
     return $(function() {
       var accessibleViewsView, detailsView, ersatzView, experimentBarView, mainController, tabsController, treeView;
-      $("#list-tabs").tabs();
-      $("#inspect-tabs").tabs();
       treeView = new TreeView();
       ersatzView = new ErsatzView();
       detailsView = new DetailsView();
