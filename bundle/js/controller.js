@@ -3,8 +3,8 @@
   define(['frank'], function(frank) {
     var createController;
     createController = function(_arg) {
-      var accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, tabsController, treeView;
-      tabsController = _arg.tabsController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel;
+      var $asplodeButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, tabsController, treeView;
+      tabsController = _arg.tabsController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton;
       treeView.model.on('active-view-changed', function(viewModel) {});
       treeView.model.on('selected-view-changed', function(viewModel) {
         detailsView.updateModel(viewModel);
@@ -18,12 +18,20 @@
       experimentBarModel.on('flash-clicked', function() {
         return frank.sendFlashCommand(experimentBarModel.get('selector'), experimentBarModel.get('engine'));
       });
+      $asplodeButton.on('click', function() {
+        var isAsploded;
+        isAsploded = ersatzView.model.toggleAsploded();
+        return $asplodeButton.toggleClass('down', isAsploded);
+      });
       boot = function() {
+        tabsController.selectLocatorTab();
         return frank.fetchViewHeirarchy().done(function(rawHeir) {
           var accessibleViews;
           treeView.model.resetViewHeir(rawHeir);
+          ersatzView.model.resetViews(treeView.model.get('allViews'));
           accessibleViews = treeView.model.getAccessibleViews();
-          return accessibleViewsView.collection.reset(accessibleViews);
+          accessibleViewsView.collection.reset(accessibleViews);
+          return ersatzView.render();
         });
       };
       return {

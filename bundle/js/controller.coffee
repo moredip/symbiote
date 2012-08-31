@@ -6,7 +6,8 @@ define ['frank'],(frank)->
     ersatzView,
     detailsView,
     accessibleViewsView,
-    experimentBarModel})->
+    experimentBarModel,
+    $asplodeButton})->
 
     treeView.model.on 'active-view-changed', (viewModel)->
 
@@ -25,14 +26,20 @@ define ['frank'],(frank)->
       )
 
 
+    $asplodeButton.on 'click', ->
+      isAsploded = ersatzView.model.toggleAsploded()
+      $asplodeButton.toggleClass( 'down', isAsploded )
+
     boot = ->
+      tabsController.selectLocatorTab()
       frank.fetchViewHeirarchy().done (rawHeir)->
         treeView.model.resetViewHeir(rawHeir)
+        ersatzView.model.resetViews(treeView.model.get('allViews'))
 
         accessibleViews = treeView.model.getAccessibleViews()
         accessibleViewsView.collection.reset( accessibleViews )
 
-        #ersatzView.model = newViewHeir
+        ersatzView.render()
 
     {
       boot: boot

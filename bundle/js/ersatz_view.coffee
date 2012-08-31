@@ -4,9 +4,10 @@ ISO_MINOR_OFFSET = 5
 BACKDROP_FRAME = { x: 0, y: 0, width: 320, height: 480 }
 #SCREENSHOT_URL = symbiote.baseUrlFor( "screenshot" )
 
-define ['transform_stack'], (transformStack)->
+define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
 
   drawStaticBackdropAndReturnTransformer = (paper,iso_skew) ->
+    paper.clear()
     paper.canvas.setAttribute "width", "100%"
     paper.canvas.setAttribute "height", "100%"
     paper.canvas.setAttribute "viewBox", "0 0 380 720"
@@ -32,7 +33,9 @@ define ['transform_stack'], (transformStack)->
       "stroke-width": 2
     ).transform transformer.push().translate(-11, -11).descAndPop()
 
-    transformer.translate(24, 120).translate(-ISO_MAJOR_OFFSET, 0)
+    transformer.translate(20, 120)
+    if( iso_skew > 0 )
+      transformer.translate(-ISO_MAJOR_OFFSET, 0)
     transformer
 
   Backbone.View.extend
@@ -40,8 +43,24 @@ define ['transform_stack'], (transformStack)->
 
     initialize: ->
       _.bindAll( @, 'render' )
+      @model = new ErsatzModel()
       @paper = new Raphael(@.el)
-      @iso_skew = ISO_SKEW
+      @model.on 'change:baseScreenshotUrl', _.bind(@refreshBaseScreenshot,@)
+      @model.on 'change:isAsploded', _.bind(@render,@)
 
     render: ->
-      @.backdropTransformer = drawStaticBackdropAndReturnTransformer(@paper,@iso_skew)
+      iso_skew = (if @model.get('isAsploded') then ISO_SKEW else 0)
+      console.log('skew:',iso_skew)
+      @backdropTransformer = drawStaticBackdropAndReturnTransformer(@paper,iso_skew)
+      @refreshBaseScreenshot()
+
+    refreshBaseScreenshot: ->
+      newScreenshotUrl = @model.get('baseScreenshotUrl')
+      return unless newScreenshotUrl?
+
+      @backdrop.remove() if @backdrop?
+      @backdrop = @paper.image()
+        .transform(@backdropTransformer.desc())
+        .attr(BACKDROP_FRAME)
+        .attr( 'src', newScreenshotUrl )
+        .toFront()

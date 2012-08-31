@@ -67,6 +67,9 @@
     return {
       fetchViewHeirarchy: fetchViewHeirarchy,
       requestSnapshotRefresh: requestSnapshotRefresh,
+      baseScreenshotUrl: function() {
+        return baseUrlFor('/screenshot');
+      },
       sendFlashCommand: function(selector, engine) {
         return sendMapRequest({
           selector: selector,

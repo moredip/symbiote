@@ -53,6 +53,7 @@ sendMapRequest = ({selector, engine, methodName, methodArgs} )->
 define ->
   fetchViewHeirarchy: fetchViewHeirarchy
   requestSnapshotRefresh: requestSnapshotRefresh
+  baseScreenshotUrl: -> baseUrlFor('/screenshot')
   sendFlashCommand: (selector,engine)-> 
     sendMapRequest( 
       selector:selector, 

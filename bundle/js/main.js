@@ -7,8 +7,6 @@
       $("#inspect-tabs").tabs();
       treeView = new TreeView();
       ersatzView = new ErsatzView();
-      ersatzView.iso_skew = 0;
-      ersatzView.render();
       detailsView = new DetailsView();
       accessibleViewsView = new AccessibleViewsView();
       experimentBarView = new ExperimentBarView();
@@ -19,7 +17,8 @@
         ersatzView: ersatzView,
         detailsView: detailsView,
         accessibleViewsView: accessibleViewsView,
-        experimentBarModel: experimentBarView.model
+        experimentBarModel: experimentBarView.model,
+        $asplodeButton: $('#asploder button')
       });
       return mainController.boot();
     });

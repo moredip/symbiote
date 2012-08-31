@@ -7,9 +7,6 @@ require ['controller','tabs_controller','tree_view','ersatz_view','details_view'
     treeView = new TreeView()
 
     ersatzView = new ErsatzView()
-    ersatzView.iso_skew = 0
-    ersatzView.render()
-
     detailsView = new DetailsView()
     accessibleViewsView = new AccessibleViewsView()
     experimentBarView = new ExperimentBarView()
@@ -22,7 +19,8 @@ require ['controller','tabs_controller','tree_view','ersatz_view','details_view'
       ersatzView: ersatzView
       detailsView: detailsView
       accessibleViewsView: accessibleViewsView
-      experimentBarModel: experimentBarView.model
+      experimentBarModel: experimentBarView.model,
+      $asplodeButton: $('#asploder button')
     )
     mainController.boot()
 

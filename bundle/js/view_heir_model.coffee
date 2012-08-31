@@ -14,7 +14,6 @@ define ['view_model'], (ViewModel)->
     getAccessibleViews: ->
       @get( 'allViews' ).filter (viewModel)-> viewModel.has('accessibilityLabel')
 
-
     resetViewHeir: (rawRootView)->
       rootViewModel = new ViewModel(rawRootView) 
       allViews = new ViewCollection( flatten( rootViewModel ) )

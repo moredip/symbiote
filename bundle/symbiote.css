@@ -431,7 +431,7 @@ div#dom-dump .treeview .hovered-in-locator {
           border-radius: 0;
 }
 
-#live-view button.down {
+#live-view, #asploder button.down {
   background-image: -webkit-linear-gradient(top, #2380CC, #154E7C);
   background-image:    -moz-linear-gradient(top, #2380CC, #154E7C);
   background-image:         linear-gradient(top, #2380CC, #154E7C);

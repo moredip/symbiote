@@ -14,10 +14,11 @@
     height: 480
   };
 
-  define(['transform_stack'], function(transformStack) {
+  define(['transform_stack', 'ersatz_model'], function(transformStack, ErsatzModel) {
     var drawStaticBackdropAndReturnTransformer;
     drawStaticBackdropAndReturnTransformer = function(paper, iso_skew) {
       var transformer;
+      paper.clear();
       paper.canvas.setAttribute("width", "100%");
       paper.canvas.setAttribute("height", "100%");
       paper.canvas.setAttribute("viewBox", "0 0 380 720");
@@ -34,18 +35,38 @@
         stroke: "gray",
         "stroke-width": 2
       }).transform(transformer.push().translate(-11, -11).descAndPop());
-      transformer.translate(24, 120).translate(-ISO_MAJOR_OFFSET, 0);
+      transformer.translate(20, 120);
+      if (iso_skew > 0) {
+        transformer.translate(-ISO_MAJOR_OFFSET, 0);
+      }
       return transformer;
     };
     return Backbone.View.extend({
       el: $('#ui-locator-view'),
       initialize: function() {
         _.bindAll(this, 'render');
+        this.model = new ErsatzModel();
         this.paper = new Raphael(this.el);
-        return this.iso_skew = ISO_SKEW;
+        this.model.on('change:baseScreenshotUrl', _.bind(this.refreshBaseScreenshot, this));
+        return this.model.on('change:isAsploded', _.bind(this.render, this));
       },
       render: function() {
-        return this.backdropTransformer = drawStaticBackdropAndReturnTransformer(this.paper, this.iso_skew);
+        var iso_skew;
+        iso_skew = (this.model.get('isAsploded') ? ISO_SKEW : 0);
+        console.log('skew:', iso_skew);
+        this.backdropTransformer = drawStaticBackdropAndReturnTransformer(this.paper, iso_skew);
+        return this.refreshBaseScreenshot();
+      },
+      refreshBaseScreenshot: function() {
+        var newScreenshotUrl;
+        newScreenshotUrl = this.model.get('baseScreenshotUrl');
+        if (newScreenshotUrl == null) {
+          return;
+        }
+        if (this.backdrop != null) {
+          this.backdrop.remove();
+        }
+        return this.backdrop = this.paper.image().transform(this.backdropTransformer.desc()).attr(BACKDROP_FRAME).attr('src', newScreenshotUrl).toFront();
       }
     });
   });
