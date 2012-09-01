@@ -17,10 +17,10 @@
         });
       });
       experimentBarModel.on('flash-clicked', function(model) {
-        return frank.sendFlashCommand(model.get('selector'), model.get('engine'));
+        return frank.sendFlashCommand(model.get('selector'), model.get('selectorEngine'));
       });
       experimentBarModel.on('touch-clicked', function(model) {
-        return frank.sendTouchCommand(model.get('selector'), model.get('engine'));
+        return frank.sendTouchCommand(model.get('selector'), model.get('selectorEngine'));
       });
       $asplodeButton.on('click', function() {
         var isAsploded;

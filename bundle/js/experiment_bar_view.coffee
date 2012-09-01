@@ -21,6 +21,8 @@ define ['experiment_bar_model','dropdown_control'], (ExperimentBarModel,Dropdown
         {name: 'uiquery', text:'UIQuery'}
       ])
       @engineDropdownView.collection.at(0).select()
+      @engineDropdownView.collection.on 'option-clicked', (option)=> 
+        @model.set( 'selectorEngine', (option.get('name')) )
 
       @$selectorInput = @$('input#query')
      

@@ -36,6 +36,9 @@
           }
         ]);
         this.engineDropdownView.collection.at(0).select();
+        this.engineDropdownView.collection.on('option-clicked', function(option) {
+          return _this.model.set('selectorEngine', option.get('name'));
+        });
         this.$selectorInput = this.$('input#query');
         this.model = new ExperimentBarModel();
         this.model.on('change', _.bind(this.update, this));

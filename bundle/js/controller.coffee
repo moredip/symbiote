@@ -23,13 +23,13 @@ define ['frank'],(frank)->
     experimentBarModel.on 'flash-clicked', (model)->
       frank.sendFlashCommand( 
         model.get('selector'), 
-        model.get('engine')
+        model.get('selectorEngine')
       )
 
     experimentBarModel.on 'touch-clicked', (model)->
       frank.sendTouchCommand( 
         model.get('selector'), 
-        model.get('engine')
+        model.get('selectorEngine')
       )
 
 
