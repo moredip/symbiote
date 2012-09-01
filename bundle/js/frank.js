@@ -83,6 +83,13 @@
           engine: engine,
           methodName: 'FEX_flash'
         });
+      },
+      sendTouchCommand: function(selector, engine) {
+        return sendMapRequest({
+          selector: selector,
+          engine: engine,
+          methodName: 'touch'
+        });
       }
     };
   });

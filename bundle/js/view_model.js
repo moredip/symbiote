@@ -45,6 +45,15 @@
       },
       getSnapshotUrl: function() {
         return frank.snapshotUrlForViewWithUid(this.get('uid'));
+      },
+      setActive: function() {
+        var _this = this;
+        return this.collection.each(function(viewModel) {
+          return viewModel.set('active', viewModel === _this);
+        });
+      },
+      unsetActive: function() {
+        return this.set('active', false);
       }
     });
     return ViewModel;

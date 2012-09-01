@@ -5,3 +5,6 @@ define ->
       selectedEngine: 'shelley_compat'
       selector: ''
 
+    actionClicked: (actionName)->
+      @trigger("#{actionName}-clicked",@)
+

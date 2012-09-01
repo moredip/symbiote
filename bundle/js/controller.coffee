@@ -16,13 +16,20 @@ define ['frank'],(frank)->
       tabsController.selectViewDetailsTab()
 
     treeView.model.on 'accessible-view-selected', (viewModel)->
+      viewModel.setActive()
       experimentBarModel.set( selector: viewModel.getShelleySelector() )
 
 
-    experimentBarModel.on 'flash-clicked', ->
+    experimentBarModel.on 'flash-clicked', (model)->
       frank.sendFlashCommand( 
-        experimentBarModel.get('selector'), 
-        experimentBarModel.get('engine')
+        model.get('selector'), 
+        model.get('engine')
+      )
+
+    experimentBarModel.on 'touch-clicked', (model)->
+      frank.sendTouchCommand( 
+        model.get('selector'), 
+        model.get('engine')
       )
 
 

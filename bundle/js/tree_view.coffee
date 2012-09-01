@@ -21,8 +21,8 @@ define ['view_heir_model'],(ViewHeirModel)->
       # because BB doesn't appear to let you bind to just immediate
       # descendants using e.g. "mouseenter > a"
       @$a()
-        .on( 'mouseenter', => @model.set('active',true) )
-        .on( 'mouseleave', => @model.set('active',false) )
+        .on( 'mouseenter', => @model.setActive() )
+        .on( 'mouseleave', => @model.unsetActive() )
         .on( 'click', => @model.trigger('selected',@model) )
 
       @refreshSelectedness()

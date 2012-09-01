@@ -2,9 +2,9 @@ define ->
 
   DropdownModel = Backbone.Model.extend
     select: ->
-      console.log( "selecting", @.get('name') )
       @collection.each (model) =>
         model.set( 'selected', model == @ )
+      @trigger('option-clicked',@)
 
   DropdownCollection = Backbone.Collection.extend
     model: DropdownModel
@@ -30,19 +30,18 @@ define ->
     unselectedModels: ->
       _(@collection.reject (m)-> m.get('selected'))
 
-    createButtonForl: (model)->
+    createButtonFor: (model)->
       $("""<button>#{model.get('text')}</button>""")
         .on 'click', => @clickedItem(model)
 
     render: ->
-      console.log( 'rendering' )
       @$el
         .empty()
-        .append( @createButtonForl(@selectedModel()) )
+        .append( @createButtonFor(@selectedModel()) )
         .append( $ul = $("<ul>") )
 
       @unselectedModels().each (model)=>
-        $ul.append( @createButtonForl(model) )
+        $ul.append( @createButtonFor(model) )
 
       @$el.append( """<div class="drop-indicator">v</div>""" )
 

@@ -3,22 +3,16 @@ define ['experiment_bar_model','dropdown_control'], (ExperimentBarModel,Dropdown
   ExperimentBarView = Backbone.View.extend
     el: $("#selector-test")
 
-    events:
-      "click .action-buttons .drop-indicator": "actionDropDownClicked"
-      "click .action-buttons .extra-actions": "actionSelected"
-      "click button#flash": 'flashClicked'
-      "click button#touch": 'touchClicked'
-      "click button#highlight": 'highlightClicked'
-
     initialize: ->
       @actionDropdownView = new DropdownControl.DropdownView()
       @actionDropdownView.setElement(@$('.action-buttons'))
       @actionDropdownView.collection.reset([
         {name: 'highlight', text:'Highlight'},
-        {name: 'bar', text:'Touch In App'},
-        {name: 'baz', text:'Flash In App'}
+        {name: 'touch', text:'Touch In App'},
+        {name: 'flash', text:'Flash In App'}
       ])
       @actionDropdownView.collection.at(0).select()
+      @actionDropdownView.collection.on 'option-clicked', (option)=> @actionClicked(option.get('name'))
 
       @engineDropdownView = new DropdownControl.DropdownView()
       @engineDropdownView.setElement(@$('.selector-engine'))
@@ -28,15 +22,9 @@ define ['experiment_bar_model','dropdown_control'], (ExperimentBarModel,Dropdown
       ])
       @engineDropdownView.collection.at(0).select()
 
-
-      @$extraActionsList = @$('.action-buttons .extra-actions')
       @$selectorInput = @$('input#query')
      
       
-      # hackery
-      $('body').on 'click', =>
-        @$extraActionsList.removeClass('shown')
-
       @model = new ExperimentBarModel()
       @model.on 'change', _.bind(@update,@)
       @update()
@@ -44,35 +32,10 @@ define ['experiment_bar_model','dropdown_control'], (ExperimentBarModel,Dropdown
     update: ->
       @$selectorInput.val( @model.get('selector') )
 
-    actionDropDownClicked: (event)->
-      event.stopPropagation()
-      @$extraActionsList.toggleClass('shown')
-
-    actionSelected: (event)->
-      $selectedButton = $(event.target)
-      $currentTopButton = @$('.action-buttons > button')
-
-      unless $selectedButton[0] == $currentTopButton[0]
-
-        # shove the button that was just selected into the 'top'
-        # action button area
-        $currentTopButton.after($selectedButton)
-        # push the current top button to the top of the 'extra'
-        # action button area. This will also remove it from the 'top' area
-        @$extraActionsList.prepend($currentTopButton)
+    actionClicked: (actionName)->
+      @updateModelFromSelectorInput() 
+      @model.actionClicked(actionName)
 
 
     updateModelFromSelectorInput: ->
       @model.set( 'selector', @$selectorInput.val() )
-
-    flashClicked: ->
-      @updateModelFromSelectorInput()
-      @model.trigger 'flash-clicked'
-
-    touchClicked: ->
-      @updateModelFromSelectorInput()
-      @model.trigger 'touch-clicked'
-
-    highlightClicked: ->
-      @updateModelFromSelectorInput()
-      @model.trigger 'highlight-clicked'

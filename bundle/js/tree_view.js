@@ -24,9 +24,9 @@
         }
         this.$el.append("<a>" + (this.model.getDesc()) + "</a>").append($childList);
         this.$a().on('mouseenter', function() {
-          return _this.model.set('active', true);
+          return _this.model.setActive();
         }).on('mouseleave', function() {
-          return _this.model.set('active', false);
+          return _this.model.unsetActive();
         }).on('click', function() {
           return _this.model.trigger('selected', _this.model);
         });

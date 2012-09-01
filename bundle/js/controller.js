@@ -11,12 +11,16 @@
         return tabsController.selectViewDetailsTab();
       });
       treeView.model.on('accessible-view-selected', function(viewModel) {
+        viewModel.setActive();
         return experimentBarModel.set({
           selector: viewModel.getShelleySelector()
         });
       });
-      experimentBarModel.on('flash-clicked', function() {
-        return frank.sendFlashCommand(experimentBarModel.get('selector'), experimentBarModel.get('engine'));
+      experimentBarModel.on('flash-clicked', function(model) {
+        return frank.sendFlashCommand(model.get('selector'), model.get('engine'));
+      });
+      experimentBarModel.on('touch-clicked', function(model) {
+        return frank.sendTouchCommand(model.get('selector'), model.get('engine'));
       });
       $asplodeButton.on('click', function() {
         var isAsploded;

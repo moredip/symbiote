@@ -4,6 +4,8 @@ define ->
 
     events: 
       "click": "clicked"
+      "mouseover":"mousedover"
+      "mouseout":"mousedout"
 
     render: ->
       @$el.empty().append( """
@@ -15,9 +17,12 @@ define ->
       """)
       @
       
+    mousedover: -> @model.setActive()
+    mousedout: -> @model.unsetActive()
 
     clicked: ->
       @model.trigger( 'accessible-selected', @model )
+  
   
   AccessibleViewsView = Backbone.View.extend
     el: $('#accessible-views')

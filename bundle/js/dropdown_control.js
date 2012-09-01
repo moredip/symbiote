@@ -5,10 +5,10 @@
     DropdownModel = Backbone.Model.extend({
       select: function() {
         var _this = this;
-        console.log("selecting", this.get('name'));
-        return this.collection.each(function(model) {
+        this.collection.each(function(model) {
           return model.set('selected', model === _this);
         });
+        return this.trigger('option-clicked', this);
       }
     });
     DropdownCollection = Backbone.Collection.extend({
@@ -38,7 +38,7 @@
           return m.get('selected');
         }));
       },
-      createButtonForl: function(model) {
+      createButtonFor: function(model) {
         var _this = this;
         return $("<button>" + (model.get('text')) + "</button>").on('click', function() {
           return _this.clickedItem(model);
@@ -47,10 +47,9 @@
       render: function() {
         var $ul,
           _this = this;
-        console.log('rendering');
-        this.$el.empty().append(this.createButtonForl(this.selectedModel())).append($ul = $("<ul>"));
+        this.$el.empty().append(this.createButtonFor(this.selectedModel())).append($ul = $("<ul>"));
         this.unselectedModels().each(function(model) {
-          return $ul.append(_this.createButtonForl(model));
+          return $ul.append(_this.createButtonFor(model));
         });
         return this.$el.append("<div class=\"drop-indicator\">v</div>");
       },

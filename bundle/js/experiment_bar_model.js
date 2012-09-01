@@ -7,6 +7,9 @@
         engines: ['shelley_compat', 'uiquery'],
         selectedEngine: 'shelley_compat',
         selector: ''
+      },
+      actionClicked: function(actionName) {
+        return this.trigger("" + actionName + "-clicked", this);
       }
     });
   });

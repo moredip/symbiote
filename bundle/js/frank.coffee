@@ -67,3 +67,9 @@ define ->
       engine: engine, 
       methodName: 'FEX_flash'
     )
+  sendTouchCommand: (selector,engine)-> 
+    sendMapRequest( 
+      selector:selector, 
+      engine: engine, 
+      methodName: 'touch'
+    )

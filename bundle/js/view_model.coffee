@@ -28,4 +28,12 @@ define ["frank"], (frank)->
     getSnapshotUrl: ->
       frank.snapshotUrlForViewWithUid(@get('uid'))
 
+    setActive: ->
+      @collection.each (viewModel)=>
+        viewModel.set( 'active', viewModel == @ )
+
+    unsetActive: ->
+      @set( 'active', false )
+
+
   ViewModel
