@@ -3,7 +3,7 @@ cacheBust = (url)-> "#{url}?#{(new Date()).getTime()}"
 baseUrlFor = (path)->
   window.location.protocol + "//" + window.location.host + "/" + path
 
-isErrorResponse = (response)-> 'ERROR' == response.outcome
+isErrorResponse = (response)-> 'SUCCESS' != response.outcome
 
 displayErrorResponse = (response)->
   alert(
@@ -45,7 +45,7 @@ sendMapRequest = ({selector, engine, methodName, methodArgs} )->
       if isErrorResponse( data )
         displayErrorResponse( data )
         deferable.reject(data)
-      deferable.resolve(data)
+      deferable.resolve(data.results)
     error: (xhr,status,error)->
       alert( "Error while talking to Frank: #{status}" )
       deferable.reject(error)

@@ -3,8 +3,8 @@
   define(['frank'], function(frank) {
     var createController;
     createController = function(_arg) {
-      var $asplodeButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, tabsController, treeView;
-      tabsController = _arg.tabsController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton;
+      var $asplodeButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, reportActionOutcome, tabsController, toastController, treeView;
+      tabsController = _arg.tabsController, toastController = _arg.toastController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton;
       treeView.model.on('active-view-changed', function(viewModel) {});
       treeView.model.on('selected-view-changed', function(viewModel) {
         detailsView.updateModel(viewModel);
@@ -16,11 +16,30 @@
           selector: viewModel.getShelleySelector()
         });
       });
+      reportActionOutcome = function(action, numViews) {
+        var message;
+        message = (function() {
+          switch (numViews) {
+            case 0:
+              return "Sorry, no views matched that selector so none were " + action;
+            case 1:
+              return "1 view was " + action;
+            default:
+              return "" + numViews + " views were " + action;
+          }
+        })();
+        return toastController.showToastMessage(message);
+      };
       experimentBarModel.on('flash-clicked', function(model) {
-        return frank.sendFlashCommand(model.get('selector'), model.get('selectorEngine'));
+        return frank.sendFlashCommand(model.get('selector'), model.get('selectorEngine')).done(function(data) {
+          return reportActionOutcome("flashed", data.length);
+        });
       });
       experimentBarModel.on('touch-clicked', function(model) {
-        return frank.sendTouchCommand(model.get('selector'), model.get('selectorEngine'));
+        var views;
+        return views = frank.sendTouchCommand(model.get('selector'), model.get('selectorEngine')).done(function(data) {
+          return reportActionOutcome("touched", data.length);
+        });
       });
       $asplodeButton.on('click', function() {
         var isAsploded;

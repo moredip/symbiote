@@ -1,7 +1,9 @@
 define ['frank'],(frank)->
 
+
   createController = ({
     tabsController,
+    toastController,
     treeView,
     ersatzView,
     detailsView,
@@ -20,17 +22,26 @@ define ['frank'],(frank)->
       experimentBarModel.set( selector: viewModel.getShelleySelector() )
 
 
+    reportActionOutcome = (action,numViews)->
+      message = switch numViews
+        when 0 then "Sorry, no views matched that selector so none were #{action}"
+        when 1 then "1 view was #{action}"
+        else "#{numViews} views were #{action}"
+      toastController.showToastMessage(message)
+
     experimentBarModel.on 'flash-clicked', (model)->
       frank.sendFlashCommand( 
         model.get('selector'), 
         model.get('selectorEngine')
-      )
+      ).done (data)->
+        reportActionOutcome( "flashed", data.length )
 
     experimentBarModel.on 'touch-clicked', (model)->
-      frank.sendTouchCommand( 
+      views = frank.sendTouchCommand( 
         model.get('selector'), 
         model.get('selectorEngine')
-      )
+      ).done (data)->
+        reportActionOutcome( "touched", data.length )
 
 
     $asplodeButton.on 'click', ->

@@ -1,4 +1,4 @@
-require ['controller','tabs_controller','tree_view','ersatz_view','details_view', 'accessible_views_view','experiment_bar_view'], (createMainController,createTabsController,TreeView,ErsatzView,DetailsView,AccessibleViewsView,ExperimentBarView)->
+require ['controller','tabs_controller','tree_view','ersatz_view','details_view', 'accessible_views_view','experiment_bar_view','toast_controller'], (createMainController,createTabsController,TreeView,ErsatzView,DetailsView,AccessibleViewsView,ExperimentBarView,createToastController)->
   $ ->
     treeView = new TreeView()
 
@@ -8,14 +8,16 @@ require ['controller','tabs_controller','tree_view','ersatz_view','details_view'
     experimentBarView = new ExperimentBarView()
 
     tabsController = createTabsController( $("#list-tabs"), $("#inspect-tabs") );
+    toastController = createToastController( $('.toast') )
 
     mainController = createMainController( 
       tabsController: tabsController
+      toastController: toastController
       treeView: treeView
       ersatzView: ersatzView
       detailsView: detailsView
       accessibleViewsView: accessibleViewsView
-      experimentBarModel: experimentBarView.model,
+      experimentBarModel: experimentBarView.model
       $asplodeButton: $('#asploder button')
     )
     mainController.boot()

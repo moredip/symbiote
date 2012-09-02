@@ -10,7 +10,7 @@
   };
 
   isErrorResponse = function(response) {
-    return 'ERROR' === response.outcome;
+    return 'SUCCESS' !== response.outcome;
   };
 
   displayErrorResponse = function(response) {
@@ -57,7 +57,7 @@
           displayErrorResponse(data);
           deferable.reject(data);
         }
-        return deferable.resolve(data);
+        return deferable.resolve(data.results);
       },
       error: function(xhr, status, error) {
         alert("Error while talking to Frank: " + status);

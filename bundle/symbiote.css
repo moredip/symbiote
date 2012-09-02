@@ -45,6 +45,7 @@ button:active { background: #999; }
   position: relative;
   height: 40px;
   padding-left: 10px;
+  overflow: hidden;
   color: #fff;
   text-shadow: 0 -1px rgba(0,0,0, .4);
   background-image: -webkit-linear-gradient(top, rgba(102,102,102, 1), rgba(51,51,51, 1) );
@@ -63,8 +64,25 @@ button:active { background: #999; }
   float: left;
 }
 
-#header i { 
-  display: none; 
+.toast { 
+  padding-left: 40px;
+  padding-top: 8px;
+  float: left;
+  height: 40px; 
+  color: hotpink;
+  font-size: 1.1em;
+  font-style: italic;
+
+  -moz-transition:all 0.2s linear;
+  -webkit-transition:all 0.2s linear;
+  -o-transition:all 0.2s linear;
+}
+
+.toast { 
+  padding-top: 40px;
+}
+.toast.show { 
+  padding-top: 8px;
 }
 
 #refresh { 
