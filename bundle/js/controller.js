@@ -1,4 +1,17 @@
 (function() {
+  var guessAtDeviceFamilyBasedOnViewDump;
+
+  guessAtDeviceFamilyBasedOnViewDump = function(viewHeir) {
+    switch (viewHeir.accessibilityFrame.size.height) {
+      case 1024:
+        return 'ipad';
+      case 480:
+        return 'iphone';
+      default:
+        console.warn("couldn't recognize device family based on screen height of " + data.accessibilityFrame.size.height + "px");
+        return 'unknown';
+    }
+  };
 
   define(['frank'], function(frank) {
     var createController;
@@ -49,9 +62,10 @@
       boot = function() {
         tabsController.selectLocatorTab();
         return frank.fetchViewHeirarchy().done(function(rawHeir) {
-          var accessibleViews;
+          var accessibleViews, deviceFamily;
+          deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHeir);
           treeView.model.resetViewHeir(rawHeir);
-          ersatzView.model.resetViews(treeView.model.get('allViews'));
+          ersatzView.model.resetViews(treeView.model.get('allViews'), deviceFamily);
           accessibleViews = treeView.model.getAccessibleViews();
           accessibleViewsView.collection.reset(accessibleViews);
           return ersatzView.render();

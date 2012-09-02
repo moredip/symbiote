@@ -6,7 +6,7 @@
 
   define(function() {
     return function(initialMatrix) {
-      var chainerFor, clone, currentMatrix, desc, descAndPop, pop, prefixedWithTranslate, push, rotate, skew, stack, translate;
+      var chainerFor, clone, currentMatrix, desc, descAndPop, pop, prefixedWithTranslate, push, rotate, scale, skew, stack, translate;
       currentMatrix = initialMatrix || R.matrix();
       stack = [currentMatrix];
       clone = function() {
@@ -48,6 +48,7 @@
       };
       translate = chainerFor('translate');
       rotate = chainerFor('rotate');
+      scale = chainerFor('scale');
       skew = function(x, y) {
         x = R.rad(x);
         y = R.rad(y);
@@ -59,6 +60,7 @@
         clone: clone,
         translate: translate,
         rotate: rotate,
+        scale: scale,
         skew: skew,
         push: push,
         pop: pop,

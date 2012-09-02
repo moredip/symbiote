@@ -41,6 +41,7 @@ define ->
 
     translate = chainerFor('translate')
     rotate = chainerFor('rotate')
+    scale = chainerFor('scale')
 
     skew = (x,y)->
       x = R.rad(x)
@@ -53,6 +54,7 @@ define ->
     clone: clone
     translate: translate
     rotate: rotate
+    scale: scale
     skew: skew
     push: push
     pop: pop

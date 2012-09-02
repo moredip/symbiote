@@ -4,8 +4,9 @@ define ["frank"], (frank)->
     initialize: ->
       @refreshBaseScreenshot()
 
-    resetViews: (views)->
+    resetViews: (views,deviceFamily)->
       @set('allViews',views)
+      @set('deviceFamily',deviceFamily)
 
     refreshBaseScreenshot: ->
       @set('baseScreenshotUrl',frank.baseScreenshotUrl())

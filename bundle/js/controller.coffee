@@ -1,5 +1,13 @@
-define ['frank'],(frank)->
 
+guessAtDeviceFamilyBasedOnViewDump = (viewHeir)->
+    switch viewHeir.accessibilityFrame.size.height
+      when 1024 then 'ipad'
+      when 480 then 'iphone'
+      else
+        console.warn( "couldn't recognize device family based on screen height of " + data.accessibilityFrame.size.height + "px" )
+        'unknown'
+
+define ['frank'],(frank)->
 
   createController = ({
     tabsController,
@@ -51,8 +59,10 @@ define ['frank'],(frank)->
     boot = ->
       tabsController.selectLocatorTab()
       frank.fetchViewHeirarchy().done (rawHeir)->
+        deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHeir)
+
         treeView.model.resetViewHeir(rawHeir)
-        ersatzView.model.resetViews(treeView.model.get('allViews'))
+        ersatzView.model.resetViews(treeView.model.get('allViews'),deviceFamily)
 
         accessibleViews = treeView.model.getAccessibleViews()
         accessibleViewsView.collection.reset( accessibleViews )
