@@ -1,5 +1,5 @@
 (function() {
-  var baseUrlFor, cacheBust, displayErrorResponse, fetchViewHeirarchy, isErrorResponse, requestSnapshotRefresh, sendMapRequest;
+  var baseUrlFor, cacheBust, displayErrorResponse, fetchOrientation, fetchViewHeirarchy, isErrorResponse, requestSnapshotRefresh, sendMapRequest;
 
   cacheBust = function(url) {
     return "" + url + "?" + ((new Date()).getTime());
@@ -24,6 +24,19 @@
       dataType: "json",
       url: baseUrlFor("/dump")
     });
+  };
+
+  fetchOrientation = function() {
+    var deferable, request;
+    deferable = new $.Deferred();
+    request = $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: baseUrlFor("/orientation")
+    }).done(function(response) {
+      return deferable.resolve(response.orientation);
+    }).fail(deferable.reject);
+    return deferable.promise();
   };
 
   requestSnapshotRefresh = function() {
@@ -70,6 +83,7 @@
   define(function() {
     return {
       fetchViewHeirarchy: fetchViewHeirarchy,
+      fetchOrientation: fetchOrientation,
       requestSnapshotRefresh: requestSnapshotRefresh,
       baseScreenshotUrl: function() {
         return cacheBust(baseUrlFor('/screenshot'));

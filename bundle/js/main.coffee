@@ -19,6 +19,8 @@ require ['controller','tabs_controller','tree_view','ersatz_view','details_view'
       accessibleViewsView: accessibleViewsView
       experimentBarModel: experimentBarView.model
       $asplodeButton: $('#asploder button')
+      $reloadButton: $('button#dump_button')
+      $liveButton: $('#live-view button')
     )
     mainController.boot()
 

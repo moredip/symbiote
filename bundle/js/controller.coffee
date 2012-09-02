@@ -1,3 +1,4 @@
+RELOAD_INTERVAL = 500
 
 guessAtDeviceFamilyBasedOnViewDump = (viewHeir)->
     switch viewHeir.accessibilityFrame.size.height
@@ -17,7 +18,9 @@ define ['frank'],(frank)->
     detailsView,
     accessibleViewsView,
     experimentBarModel,
-    $asplodeButton})->
+    $asplodeButton,
+    $reloadButton,
+    $liveButton})->
 
     treeView.model.on 'active-view-changed', (viewModel)->
 
@@ -56,18 +59,45 @@ define ['frank'],(frank)->
       isAsploded = ersatzView.model.toggleAsploded()
       $asplodeButton.toggleClass( 'down', isAsploded )
 
-    boot = ->
-      tabsController.selectLocatorTab()
-      frank.fetchViewHeirarchy().done (rawHeir)->
+    $reloadButton.on 'click', ->
+      reload().done ->
+        toastController.showToastMessage('views reloaded')
+
+    liveTimeout = undefined
+    reloadLoop = ->
+      reload()
+      liveTimeout = window.setTimeout( reloadLoop, RELOAD_INTERVAL )
+
+    $liveButton.on 'click', ->
+      window.clearTimeout(liveTimeout) if liveTimeout?
+
+      if $liveButton.hasClass('down')
+        toastController.showToastMessage('leaving live mode')
+        $liveButton.removeClass('down')
+      else
+        reloadLoop()
+        toastController.showToastMessage('entering live mode')
+        $liveButton.addClass('down')
+        
+    reload = ->
+      deferable = $.Deferred()
+      $.when( frank.fetchViewHeirarchy(), frank.fetchOrientation() ).done ([rawHeir,],orientation)->
         deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHeir)
 
         treeView.model.resetViewHeir(rawHeir)
-        ersatzView.model.resetViews(treeView.model.get('allViews'),deviceFamily)
+        ersatzView.model.resetViews(treeView.model.get('allViews'),deviceFamily,orientation)
 
         accessibleViews = treeView.model.getAccessibleViews()
         accessibleViewsView.collection.reset( accessibleViews )
 
         ersatzView.render()
+        deferable.resolve()
+
+      deferable.promise()
+
+    boot = ->
+      tabsController.selectLocatorTab()
+      reload()
 
     {
       boot: boot

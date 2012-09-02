@@ -18,7 +18,9 @@
         detailsView: detailsView,
         accessibleViewsView: accessibleViewsView,
         experimentBarModel: experimentBarView.model,
-        $asplodeButton: $('#asploder button')
+        $asplodeButton: $('#asploder button'),
+        $reloadButton: $('button#dump_button'),
+        $liveButton: $('#live-view button')
       });
       return mainController.boot();
     });

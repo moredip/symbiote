@@ -6,9 +6,10 @@
       initialize: function() {
         return this.refreshBaseScreenshot();
       },
-      resetViews: function(views, deviceFamily) {
+      resetViews: function(views, deviceFamily, orientation) {
         this.set('allViews', views);
-        return this.set('deviceFamily', deviceFamily);
+        this.set('deviceFamily', deviceFamily);
+        return this.set('orientation', orientation);
       },
       refreshBaseScreenshot: function() {
         return this.set('baseScreenshotUrl', frank.baseScreenshotUrl());

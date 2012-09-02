@@ -1,5 +1,7 @@
 (function() {
-  var guessAtDeviceFamilyBasedOnViewDump;
+  var RELOAD_INTERVAL, guessAtDeviceFamilyBasedOnViewDump;
+
+  RELOAD_INTERVAL = 500;
 
   guessAtDeviceFamilyBasedOnViewDump = function(viewHeir) {
     switch (viewHeir.accessibilityFrame.size.height) {
@@ -16,8 +18,8 @@
   define(['frank'], function(frank) {
     var createController;
     createController = function(_arg) {
-      var $asplodeButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, reportActionOutcome, tabsController, toastController, treeView;
-      tabsController = _arg.tabsController, toastController = _arg.toastController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton;
+      var $asplodeButton, $liveButton, $reloadButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, liveTimeout, reload, reloadLoop, reportActionOutcome, tabsController, toastController, treeView;
+      tabsController = _arg.tabsController, toastController = _arg.toastController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton, $reloadButton = _arg.$reloadButton, $liveButton = _arg.$liveButton;
       treeView.model.on('active-view-changed', function(viewModel) {});
       treeView.model.on('selected-view-changed', function(viewModel) {
         detailsView.updateModel(viewModel);
@@ -59,17 +61,48 @@
         isAsploded = ersatzView.model.toggleAsploded();
         return $asplodeButton.toggleClass('down', isAsploded);
       });
-      boot = function() {
-        tabsController.selectLocatorTab();
-        return frank.fetchViewHeirarchy().done(function(rawHeir) {
-          var accessibleViews, deviceFamily;
+      $reloadButton.on('click', function() {
+        return reload().done(function() {
+          return toastController.showToastMessage('views reloaded');
+        });
+      });
+      liveTimeout = void 0;
+      reloadLoop = function() {
+        reload();
+        return liveTimeout = window.setTimeout(reloadLoop, RELOAD_INTERVAL);
+      };
+      $liveButton.on('click', function() {
+        if (liveTimeout != null) {
+          window.clearTimeout(liveTimeout);
+        }
+        if ($liveButton.hasClass('down')) {
+          toastController.showToastMessage('leaving live mode');
+          return $liveButton.removeClass('down');
+        } else {
+          reloadLoop();
+          toastController.showToastMessage('entering live mode');
+          return $liveButton.addClass('down');
+        }
+      });
+      reload = function() {
+        var deferable;
+        deferable = $.Deferred();
+        $.when(frank.fetchViewHeirarchy(), frank.fetchOrientation()).done(function(_arg1, orientation) {
+          var accessibleViews, deviceFamily, rawHeir;
+          rawHeir = _arg1[0];
           deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHeir);
           treeView.model.resetViewHeir(rawHeir);
-          ersatzView.model.resetViews(treeView.model.get('allViews'), deviceFamily);
+          ersatzView.model.resetViews(treeView.model.get('allViews'), deviceFamily, orientation);
           accessibleViews = treeView.model.getAccessibleViews();
           accessibleViewsView.collection.reset(accessibleViews);
-          return ersatzView.render();
+          ersatzView.render();
+          return deferable.resolve();
         });
+        return deferable.promise();
+      };
+      boot = function() {
+        tabsController.selectLocatorTab();
+        return reload();
       };
       return {
         boot: boot

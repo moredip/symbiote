@@ -1,4 +1,4 @@
-ISO_SKEW = 25
+ISO_SKEW = 15
 ISO_MAJOR_OFFSET = 50
 ISO_MINOR_OFFSET = 5
 SCREEN_BOUNDS = {
@@ -9,7 +9,7 @@ SCREEN_BOUNDS = {
 
 define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
 
-  drawStaticBackdropAndReturnTransformer = (paper,deviceFamily,isoSkew) ->
+  drawStaticBackdropAndReturnTransformer = (paper,deviceFamily,orientation,isoSkew) ->
     paper.clear()
     paper.canvas.setAttribute "width", "100%"
     paper.canvas.setAttribute "height", "100%"
@@ -20,8 +20,11 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
       paper.canvas.setAttribute "viewBox", "0 0 875 1200"
 
     transformer = transformStack()
+
     transformer.skew(0, isoSkew).translate( 6, 6 )
 
+    if 'landscape' == orientation
+      transformer.translate(190,360).rotate('90').translate(-190,-360)
 
     # main outline of device
     if 'iphone' == deviceFamily
@@ -109,7 +112,7 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
 
     render: ->
       isoSkew = (if @model.get('isAsploded') then ISO_SKEW else 0)
-      @backdropTransformer = drawStaticBackdropAndReturnTransformer(@paper,@model.get('deviceFamily'),isoSkew)
+      @backdropTransformer = drawStaticBackdropAndReturnTransformer(@paper,@model.get('deviceFamily'),@model.get('orientation'),isoSkew)
       @backdrop = @paper.image()
       @refreshBaseScreenshot()
       if @model.get('isAsploded')

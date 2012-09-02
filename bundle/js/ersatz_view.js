@@ -1,7 +1,7 @@
 (function() {
   var ISO_MAJOR_OFFSET, ISO_MINOR_OFFSET, ISO_SKEW, SCREEN_BOUNDS;
 
-  ISO_SKEW = 25;
+  ISO_SKEW = 15;
 
   ISO_MAJOR_OFFSET = 50;
 
@@ -24,7 +24,7 @@
 
   define(['transform_stack', 'ersatz_model'], function(transformStack, ErsatzModel) {
     var ErsatzView, ErsatzViewSnapshotView, drawStaticBackdropAndReturnTransformer, transformFromBaseForViewModel;
-    drawStaticBackdropAndReturnTransformer = function(paper, deviceFamily, isoSkew) {
+    drawStaticBackdropAndReturnTransformer = function(paper, deviceFamily, orientation, isoSkew) {
       var transformer;
       paper.clear();
       paper.canvas.setAttribute("width", "100%");
@@ -36,6 +36,9 @@
       }
       transformer = transformStack();
       transformer.skew(0, isoSkew).translate(6, 6);
+      if ('landscape' === orientation) {
+        transformer.translate(190, 360).rotate('90').translate(-190, -360);
+      }
       if ('iphone' === deviceFamily) {
         paper.rect(0, 0, 360, 708, 40).attr({
           fill: "black",
@@ -126,7 +129,7 @@
       render: function() {
         var isoSkew;
         isoSkew = (this.model.get('isAsploded') ? ISO_SKEW : 0);
-        this.backdropTransformer = drawStaticBackdropAndReturnTransformer(this.paper, this.model.get('deviceFamily'), isoSkew);
+        this.backdropTransformer = drawStaticBackdropAndReturnTransformer(this.paper, this.model.get('deviceFamily'), this.model.get('orientation'), isoSkew);
         this.backdrop = this.paper.image();
         this.refreshBaseScreenshot();
         if (this.model.get('isAsploded')) {

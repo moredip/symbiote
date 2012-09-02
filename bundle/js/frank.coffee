@@ -16,6 +16,19 @@ fetchViewHeirarchy = ->
     dataType: "json",
     url: baseUrlFor( "/dump" )
 
+fetchOrientation = ->
+  deferable = new $.Deferred()
+
+  request = $.ajax(
+    type: "POST",
+    dataType: "json",
+    url: baseUrlFor( "/orientation" )
+  ).done (response)->
+    deferable.resolve( response.orientation )
+  .fail( deferable.reject )
+
+  deferable.promise()
+
 requestSnapshotRefresh = ->
   $.ajax
     type: 'GET'
@@ -56,6 +69,7 @@ sendMapRequest = ({selector, engine, methodName, methodArgs} )->
 
 define ->
   fetchViewHeirarchy: fetchViewHeirarchy
+  fetchOrientation: fetchOrientation
   requestSnapshotRefresh: requestSnapshotRefresh
   baseScreenshotUrl: -> 
     cacheBust( baseUrlFor('/screenshot') )
