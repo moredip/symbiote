@@ -20,7 +20,7 @@ fetchOrientation = ->
   deferable = new $.Deferred()
 
   request = $.ajax(
-    type: "POST",
+    type: "GET",
     dataType: "json",
     url: baseUrlFor( "/orientation" )
   ).done (response)->
