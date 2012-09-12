@@ -24,7 +24,7 @@ fetchOrientation = ->
     dataType: "json",
     url: baseUrlFor( "/orientation" )
   ).done (response)->
-    deferable.resolve( response.orientation )
+    deferable.resolve( response && response.detailed_orientation || 'unknown' )
   .fail( deferable.reject )
 
   deferable.promise()
@@ -87,3 +87,10 @@ define ->
       engine: engine, 
       methodName: 'touch'
     )
+  getAccessibilityFramesForViewsMatchingSelector: (selector,engine)->
+    sendMapRequest( 
+      selector:selector, 
+      engine: engine, 
+      methodName: 'accessibilityFrame'
+    )
+

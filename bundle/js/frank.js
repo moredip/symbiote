@@ -34,7 +34,7 @@
       dataType: "json",
       url: baseUrlFor("/orientation")
     }).done(function(response) {
-      return deferable.resolve(response.orientation);
+      return deferable.resolve(response && response.detailed_orientation || 'unknown');
     }).fail(deferable.reject);
     return deferable.promise();
   };
@@ -103,6 +103,13 @@
           selector: selector,
           engine: engine,
           methodName: 'touch'
+        });
+      },
+      getAccessibilityFramesForViewsMatchingSelector: function(selector, engine) {
+        return sendMapRequest({
+          selector: selector,
+          engine: engine,
+          methodName: 'accessibilityFrame'
         });
       }
     };

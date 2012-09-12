@@ -54,6 +54,13 @@ define ['frank'],(frank)->
       ).done (data)->
         reportActionOutcome( "touched", data.length )
 
+    experimentBarModel.on 'highlight-clicked', (model)->
+      views = frank.getAccessibilityFramesForViewsMatchingSelector( 
+        model.get('selector'), 
+        model.get('selectorEngine')
+      ).done (data)->
+        alert('TODO')
+        reportActionOutcome( "highlighted", data.length )
 
     $asplodeButton.on 'click', ->
       isAsploded = ersatzView.model.toggleAsploded()

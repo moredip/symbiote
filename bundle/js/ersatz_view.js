@@ -1,5 +1,6 @@
 (function() {
-  var ISO_MAJOR_OFFSET, ISO_MINOR_OFFSET, ISO_SKEW, SCREEN_BOUNDS;
+  var ISO_MAJOR_OFFSET, ISO_MINOR_OFFSET, ISO_SKEW, SCREEN_BOUNDS,
+    __slice = [].slice;
 
   ISO_SKEW = 15;
 
@@ -25,21 +26,36 @@
   define(['transform_stack', 'ersatz_model'], function(transformStack, ErsatzModel) {
     var ErsatzView, ErsatzViewSnapshotView, drawStaticBackdropAndReturnTransformer, transformFromBaseForViewModel;
     drawStaticBackdropAndReturnTransformer = function(paper, deviceFamily, orientation, isoSkew) {
-      var transformer;
+      var isiPhone, rotation, rotationPoint, transformer;
       paper.clear();
       paper.canvas.setAttribute("width", "100%");
       paper.canvas.setAttribute("height", "100%");
-      if ('iphone' === deviceFamily) {
+      isiPhone = 'iphone' === deviceFamily;
+      if (isiPhone) {
         paper.canvas.setAttribute("viewBox", "0 0 380 720");
+        rotationPoint = [190, 360];
       } else {
         paper.canvas.setAttribute("viewBox", "0 0 875 1200");
+        rotationPoint = [437, 600];
       }
       transformer = transformStack();
       transformer.skew(0, isoSkew).translate(6, 6);
-      if ('landscape' === orientation) {
-        transformer.translate(190, 360).rotate('90').translate(-190, -360);
+      rotation = (function() {
+        switch (orientation) {
+          case 'landscape_right':
+            return 90;
+          case 'portrait_upside_down':
+            return 180;
+          case 'landscape_left':
+            return 270;
+          default:
+            return false;
+        }
+      })();
+      if (rotation) {
+        transformer.rotateAroundPoint.apply(transformer, [rotation].concat(__slice.call(rotationPoint)));
       }
-      if ('iphone' === deviceFamily) {
+      if (isiPhone) {
         paper.rect(0, 0, 360, 708, 40).attr({
           fill: "black",
           stroke: "gray",
@@ -52,7 +68,7 @@
           'stroke-width': 6
         }).transform(transformer.desc());
       }
-      if ('iphone' === deviceFamily) {
+      if (isiPhone) {
         transformer.push().translate(180, 655);
         paper.circle(0, 0, 34).transform(transformer.desc()).attr("fill", "90-#303030-#101010");
         paper.rect(0, 0, 22, 22, 5).attr({

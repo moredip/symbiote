@@ -14,20 +14,31 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
     paper.canvas.setAttribute "width", "100%"
     paper.canvas.setAttribute "height", "100%"
 
-    if 'iphone' == deviceFamily
+    isiPhone = ('iphone' == deviceFamily)
+
+    if isiPhone
       paper.canvas.setAttribute "viewBox", "0 0 380 720"
+      rotationPoint = [190,360]
     else
       paper.canvas.setAttribute "viewBox", "0 0 875 1200"
+      rotationPoint = [437,600]
 
     transformer = transformStack()
 
     transformer.skew(0, isoSkew).translate( 6, 6 )
 
-    if 'landscape' == orientation
-      transformer.translate(190,360).rotate('90').translate(-190,-360)
+
+    rotation = switch orientation
+      when 'landscape_right' then 90
+      when 'portrait_upside_down' then 180
+      when 'landscape_left' then 270
+      else false
+
+    if rotation
+      transformer.rotateAroundPoint(rotation,rotationPoint...)
 
     # main outline of device
-    if 'iphone' == deviceFamily
+    if isiPhone
       paper.rect(0, 0, 360, 708, 40).attr(
         fill: "black"
         stroke: "gray"
@@ -41,7 +52,7 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
       ).transform transformer.desc()
 
 
-    if 'iphone' == deviceFamily
+    if isiPhone
       # home button
       transformer.push().translate( 180, 655 )
       paper.circle(0, 0, 34).transform(transformer.desc()).attr( "fill", "90-#303030-#101010" )

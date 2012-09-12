@@ -50,16 +50,10 @@ define ->
       currentMatrix.add( 1, Math.tan(y), 0, 1, 0, 0 )
       @
 
+    rotateAroundPoint = (rot,x,y)->
+      @translate(x,y).rotate(rot).translate(-x,-y)
 
-    clone: clone
-    translate: translate
-    rotate: rotate
-    scale: scale
-    skew: skew
-    push: push
-    pop: pop
-    desc: desc
-    descAndPop: descAndPop
-    prefixedWithTranslate: prefixedWithTranslate
-
-
+    {
+      clone, translate, rotate, scale, skew, rotateAroundPoint,
+      push, pop, desc, descAndPop, prefixedWithTranslate 
+    }

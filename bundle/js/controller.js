@@ -56,6 +56,13 @@
           return reportActionOutcome("touched", data.length);
         });
       });
+      experimentBarModel.on('highlight-clicked', function(model) {
+        var views;
+        return views = frank.getAccessibilityFramesForViewsMatchingSelector(model.get('selector'), model.get('selectorEngine')).done(function(data) {
+          alert('TODO');
+          return reportActionOutcome("highlighted", data.length);
+        });
+      });
       $asplodeButton.on('click', function() {
         var isAsploded;
         isAsploded = ersatzView.model.toggleAsploded();
