@@ -18,7 +18,7 @@ class SinatraStaticServer < Sinatra::Base
   get(/.+/) do
     case request.path
     when "/orientation"
-      %Q|{"orientation":"portrait"}|
+      %Q|{"orientation":"portrait","detailed_orientation":"portrait"}|
     when "/screenshot"
       send_file( File.expand_path( "../fake_server/fake_screenshot", __FILE__ ) )
     when %r|^/screenshot/view-snapshot/|
