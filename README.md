@@ -17,9 +17,7 @@ open http://localhost:9292
 
 ## TODO
 
-- Highlighting views that match selector
 - Mouse over ersatz to highlight view in hierarchy
-- better layout in landscape
 - history of selectors
 
 ###License

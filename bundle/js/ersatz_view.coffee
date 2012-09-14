@@ -109,19 +109,16 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
     initialize: ->
       _.bindAll( @, 'render' )
       @model = new ErsatzModel()
+      @highlights = []
       @paper = new Raphael(@.el)
       @model.on 'change:baseScreenshotUrl', _.bind(@refreshBaseScreenshot,@)
       @model.on 'change:isAsploded', _.bind(@render,@)
       @model.on 'snapshots-refreshed', _.bind(@refreshSnapshots,@)
-      @model.on 'change:allViews', =>
-        @model.get('allViews').on 'change:active', (subject,isActive)=>
-          if isActive
-            @highlight.show()
-            @updateHighlight(subject)
-          else
-            @highlight.hide()
+      @model.on 'change:highlightFrames', _.bind(@refreshHighlightFrames,@)
 
     render: ->
+      @highlights = []
+
       isoSkew = (if @model.get('isAsploded') then ISO_SKEW else 0)
       @backdropTransformer = drawStaticBackdropAndReturnTransformer(@paper,@model.get('deviceFamily'),@model.get('orientation'),isoSkew)
       @backdrop = @paper.image()
@@ -129,12 +126,6 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
       if @model.get('isAsploded')
         @backdrop.attr('opacity',0.5)
         @refreshSnapshots()
-
-      @highlight = @paper.rect().attr(
-        fill: "#aaff00"
-        opacity: 0.8
-        stroke: "black"
-      )
 
       @el
 
@@ -159,31 +150,18 @@ define ['transform_stack','ersatz_model'], (transformStack,ErsatzModel)->
           el: @paper.image()
         )
 
-     updateHighlight: (viewModel)->
-       if @model.get('isAsploded')
-         @highlight.hide()
-         return
-       else
-         @highlight.show()
+    refreshHighlightFrames: ->
+      h.remove() for h in @highlights
+      @highlights = []
 
-       frame = viewModel.get('accessibilityFrame')
-       @highlight.attr(
-          transform: transformFromBaseForViewModel(@backdropTransformer,viewModel, false )
+      @highlights = _.map @model.get('highlightFrames'), ({origin,size})=>
+        @paper.rect().attr(
+          fill: "#aaff00"
+          opacity: 0.8
+          stroke: "black"
+          transform: @backdropTransformer.push().translate(origin.x,origin.y).descAndPop()
           x: 0
           y: 0
-          width: frame.size.width
-          height: frame.size.height
-       ).toFront()
-
-
-        #ErsatzView.
-        #frame = view.get('accessibilityFrame')
-        #transformation = @backdropTransformer
-          #.push()
-          #.translate(frame.origin.x, frame.origin.y)
-          #.translate(view.get('depth')*-ISO_MINOR_OFFSET, 0)
-          #.descAndPop()
-
-        #@paper
-         #.image( view.getSnapshotUrl(), 0, 0, frame.size.width, frame.size.height )
-         #.transform(transformation)
+          width: size.width
+          height: size.height
+        )

@@ -124,26 +124,18 @@
     return ErsatzView = Backbone.View.extend({
       el: $('#ui-locator-view'),
       initialize: function() {
-        var _this = this;
         _.bindAll(this, 'render');
         this.model = new ErsatzModel();
+        this.highlights = [];
         this.paper = new Raphael(this.el);
         this.model.on('change:baseScreenshotUrl', _.bind(this.refreshBaseScreenshot, this));
         this.model.on('change:isAsploded', _.bind(this.render, this));
         this.model.on('snapshots-refreshed', _.bind(this.refreshSnapshots, this));
-        return this.model.on('change:allViews', function() {
-          return _this.model.get('allViews').on('change:active', function(subject, isActive) {
-            if (isActive) {
-              _this.highlight.show();
-              return _this.updateHighlight(subject);
-            } else {
-              return _this.highlight.hide();
-            }
-          });
-        });
+        return this.model.on('change:highlightFrames', _.bind(this.refreshHighlightFrames, this));
       },
       render: function() {
         var isoSkew;
+        this.highlights = [];
         isoSkew = (this.model.get('isAsploded') ? ISO_SKEW : 0);
         this.backdropTransformer = drawStaticBackdropAndReturnTransformer(this.paper, this.model.get('deviceFamily'), this.model.get('orientation'), isoSkew);
         this.backdrop = this.paper.image();
@@ -152,11 +144,6 @@
           this.backdrop.attr('opacity', 0.5);
           this.refreshSnapshots();
         }
-        this.highlight = this.paper.rect().attr({
-          fill: "#aaff00",
-          opacity: 0.8,
-          stroke: "black"
-        });
         return this.el;
       },
       screenBounds: function() {
@@ -181,22 +168,29 @@
           });
         });
       },
-      updateHighlight: function(viewModel) {
-        var frame;
-        if (this.model.get('isAsploded')) {
-          this.highlight.hide();
-          return;
-        } else {
-          this.highlight.show();
+      refreshHighlightFrames: function() {
+        var h, _i, _len, _ref,
+          _this = this;
+        _ref = this.highlights;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          h = _ref[_i];
+          h.remove();
         }
-        frame = viewModel.get('accessibilityFrame');
-        return this.highlight.attr({
-          transform: transformFromBaseForViewModel(this.backdropTransformer, viewModel, false),
-          x: 0,
-          y: 0,
-          width: frame.size.width,
-          height: frame.size.height
-        }).toFront();
+        this.highlights = [];
+        return this.highlights = _.map(this.model.get('highlightFrames'), function(_arg) {
+          var origin, size;
+          origin = _arg.origin, size = _arg.size;
+          return _this.paper.rect().attr({
+            fill: "#aaff00",
+            opacity: 0.8,
+            stroke: "black",
+            transform: _this.backdropTransformer.push().translate(origin.x, origin.y).descAndPop(),
+            x: 0,
+            y: 0,
+            width: size.width,
+            height: size.height
+          });
+        });
       }
     });
   });

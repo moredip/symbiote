@@ -18,7 +18,7 @@
   define(['frank'], function(frank) {
     var createController;
     createController = function(_arg) {
-      var $asplodeButton, $liveButton, $reloadButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, liveTimeout, reload, reloadLoop, reportActionOutcome, tabsController, toastController, treeView;
+      var $asplodeButton, $liveButton, $reloadButton, accessibleViewsView, boot, detailsView, ersatzView, experimentBarModel, liveTimeout, reload, reloadLoop, reportActionOutcome, tabsController, toastController, treeView, validateViewSelector;
       tabsController = _arg.tabsController, toastController = _arg.toastController, treeView = _arg.treeView, ersatzView = _arg.ersatzView, detailsView = _arg.detailsView, accessibleViewsView = _arg.accessibleViewsView, experimentBarModel = _arg.experimentBarModel, $asplodeButton = _arg.$asplodeButton, $reloadButton = _arg.$reloadButton, $liveButton = _arg.$liveButton;
       treeView.model.on('active-view-changed', function(viewModel) {});
       treeView.model.on('selected-view-changed', function(viewModel) {
@@ -45,21 +45,42 @@
         })();
         return toastController.showToastMessage(message);
       };
+      validateViewSelector = function(selector) {
+        if (selector.length === 0) {
+          toastController.showToastMessage("You haven't provided a view selector. Please enter one below.");
+          return false;
+        } else {
+          return true;
+        }
+      };
       experimentBarModel.on('flash-clicked', function(model) {
-        return frank.sendFlashCommand(model.get('selector'), model.get('selectorEngine')).done(function(data) {
+        var selector, selectorEngine, _ref;
+        _ref = [model.get('selector'), model.get('selectorEngine')], selector = _ref[0], selectorEngine = _ref[1];
+        if (!validateViewSelector(selector)) {
+          return;
+        }
+        return frank.sendFlashCommand(selector, selectorEngine).done(function(data) {
           return reportActionOutcome("flashed", data.length);
         });
       });
       experimentBarModel.on('touch-clicked', function(model) {
-        var views;
-        return views = frank.sendTouchCommand(model.get('selector'), model.get('selectorEngine')).done(function(data) {
+        var selector, selectorEngine, views, _ref;
+        _ref = [model.get('selector'), model.get('selectorEngine')], selector = _ref[0], selectorEngine = _ref[1];
+        if (!validateViewSelector(selector)) {
+          return;
+        }
+        return views = frank.sendTouchCommand(selector, selectorEngine).done(function(data) {
           return reportActionOutcome("touched", data.length);
         });
       });
       experimentBarModel.on('highlight-clicked', function(model) {
-        var views;
-        return views = frank.getAccessibilityFramesForViewsMatchingSelector(model.get('selector'), model.get('selectorEngine')).done(function(data) {
-          alert('TODO');
+        var selector, selectorEngine, views, _ref;
+        _ref = [model.get('selector'), model.get('selectorEngine')], selector = _ref[0], selectorEngine = _ref[1];
+        if (!validateViewSelector(selector)) {
+          return;
+        }
+        return views = frank.getAccessibilityFramesForViewsMatchingSelector(selector, selectorEngine).done(function(data) {
+          ersatzView.model.highlightSomeFramesForABit(data);
           return reportActionOutcome("highlighted", data.length);
         });
       });

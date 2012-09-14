@@ -40,26 +40,42 @@ define ['frank'],(frank)->
         else "#{numViews} views were #{action}"
       toastController.showToastMessage(message)
 
+    validateViewSelector = (selector)->
+      if selector.length == 0
+        toastController.showToastMessage("You haven't provided a view selector. Please enter one below.")
+        false
+      else
+        true
+
+
     experimentBarModel.on 'flash-clicked', (model)->
+      [selector, selectorEngine] = [model.get('selector'), model.get('selectorEngine')]
+      return unless validateViewSelector(selector)
       frank.sendFlashCommand( 
-        model.get('selector'), 
-        model.get('selectorEngine')
+        selector,
+        selectorEngine
       ).done (data)->
         reportActionOutcome( "flashed", data.length )
 
     experimentBarModel.on 'touch-clicked', (model)->
+      [selector, selectorEngine] = [model.get('selector'), model.get('selectorEngine')]
+      return unless validateViewSelector(selector)
+
       views = frank.sendTouchCommand( 
-        model.get('selector'), 
-        model.get('selectorEngine')
+        selector,
+        selectorEngine
       ).done (data)->
         reportActionOutcome( "touched", data.length )
 
     experimentBarModel.on 'highlight-clicked', (model)->
+      [selector, selectorEngine] = [model.get('selector'), model.get('selectorEngine')]
+      return unless validateViewSelector(selector)
+
       views = frank.getAccessibilityFramesForViewsMatchingSelector( 
-        model.get('selector'), 
-        model.get('selectorEngine')
+        selector,
+        selectorEngine
       ).done (data)->
-        alert('TODO')
+        ersatzView.model.highlightSomeFramesForABit( data )
         reportActionOutcome( "highlighted", data.length )
 
     $asplodeButton.on 'click', ->
