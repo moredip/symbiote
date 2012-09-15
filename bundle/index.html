@@ -3,20 +3,15 @@
   <head>
     <meta charset='utf-8' />
     <title>Symbiote</title>
-    <script src='jquery.min.js'></script>
-    <script src='jquery-ui.min.js'></script>
-    <script src='bean.min.js'></script>
-    <script src='coffee-script.js'></script>
-    <script src='raphael.js'></script>
-    <script src='jquery.treeview.js'></script>
-    <script src='json2.js'></script>
-    <script src='underscore.js'></script>
-    <script src='symbiote.js'></script>
-    <script src='transform_stack.js'></script>
-    <script src='view_tree.js'></script>
-    <script src='phoney.js'></script>
-    <script src='phoney_iphone.js'></script>
-    <script src='symbiote_ui.js'></script>
+    <script src='js/lib/jquery.min.js'></script>
+    <script src='js/lib/jquery-ui.min.js'></script>
+    <script src='js/lib/jquery.treeview.js'></script>
+    <script src='js/lib/coffee-script.js'></script>
+    <script src='js/lib/raphael.js'></script>
+    <script src='js/lib/underscore.js'></script>
+    <script src='js/lib/backbone.js'></script>
+    <script src='js/lib/json2.js'></script>
+    <script data-main='/js/main' src='js/lib/require.js'></script>
     <link href='reset.css' rel='stylesheet' />
     <link href='pictos/pictos.css' rel='stylesheet' />
     <link href='jquery.treeview.css' rel='stylesheet' />
@@ -25,7 +20,7 @@
   <body>
     <header id='header'>
       <h1>symbiote</h1>
-      <i>From here you can inspect the current state of the app's UI, and test which UI elements a selector will select</i>
+      <div class='toast'></div>
       <div id='refresh'>
         <button id='dump_button'>
           <span></span>
@@ -34,40 +29,30 @@
     </header>
     <section class='symbiote_shell'>
       <article id='selector-test'>
+        <label class='selector-engine-label'>
+          use &rarr;
+        </label>
+        <div class='selector-engine dropdown'></div>
+        <label></label>
+        to select views that match &rarr;
         <input id='query' placeholder="Selector label marked:'Search'" />
-        <div class='action-buttons'>
-          <button id='highlight'>Highlight</button>
-          <ul class='extra-actions'>
-            <li>
-              <button id='touch'>Touch In App</button>
-            </li>
-            <li>
-              <button id='flash'>Flash In App</button>
-            </li>
-          </ul>
-          <div class='drop-indicator'>v</div>
-        </div>
-        <div class='selector_engine'>
-          <input id='selector_engine' value='shelley_compat' />
-          <button id='selector_engine_dropdown'>&#x25BC;</button>
-          <ul id='selector_engine_options'>
-            <li>shelley_compat</li>
-            <li>uiquery</li>
-          </ul>
-        </div>
+        <label>
+          and then &rarr;
+        </label>
+        <div class='action-buttons dropdown'></div>
       </article>
     </section>
     <section class='the-columns'>
       <div id='list-tabs'>
         <ul>
           <li>
-            <a href='#dom_dump'>View Heirarchy</a>
+            <a href='#dom-dump'>View Heirarchy</a>
           </li>
           <li>
             <a href='#accessible-views-tab'>Accessible Elements</a>
           </li>
         </ul>
-        <div id='dom_dump'>
+        <div id='dom-dump'>
           <ul></ul>
         </div>
         <div id='accessible-views-tab'>
@@ -81,7 +66,7 @@
       <div id='inspect-tabs'>
         <ul>
           <li>
-            <a href='#dom_detail'>View Properties</a>
+            <a href='#dom-detail'>View Properties</a>
           </li>
           <li>
             <a href='#ui-locator'>View Locator</a>
@@ -102,7 +87,7 @@
           <button id='ui-locator-rotator'>1</button>
           <div id='ui-locator-view'></div>
         </div>
-        <div id='dom_detail'>
+        <div id='dom-detail'>
           <p>Click an element in the view heirarchy on the right to see details of that element here.</p>
         </div>
       </div>
