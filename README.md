@@ -17,6 +17,7 @@ open http://localhost:9292
 
 ## TODO
 
+- populate engine list from API call
 - Mouse over ersatz to highlight view in hierarchy
 - history of selectors
 
