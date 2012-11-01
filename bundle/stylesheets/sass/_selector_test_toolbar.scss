@@ -1,0 +1,81 @@
+$wrap-middle-width: 40%;
+$wrap-outter-width: 100% - ($wrap-middle-width/2);
+$query-input-width: 70%;
+$query-label-width: 100% - $query-input-width;
+$query-label-height: 40px;
+#selector-test {
+  position: relative;
+  padding: 8px;
+  text-align: center;
+
+  .wrap {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    height: $selector-test-height;
+    padding: 0 .5em;
+    &.middle { max-width: $wrap-middle-width; }
+    &.outter { max-width: $wrap-outter-width; }
+  }//.wrap
+
+  input {
+    &#selector_engine { width: 13em; }
+    &#query { width: $query-input-width; }
+  }//input
+
+  label {
+    &:after { content: "#{$arrow-right-down}"; }
+
+    &.query {
+      width: $query-label-width;
+      float: left;
+      overflow: hidden;
+      height: $query-label-height;
+    }//&.query
+  }//label
+}//#selector-test
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  * { z-index: 1; }
+
+  button {
+    position: relative;
+    width: 100%;
+    padding: 8px 2em 8px 0.8em;
+  }//button
+
+  ul {
+    position: absolute;
+    top: 100%;
+    float: left;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    @include transition-two( visibility 0s linear 0.2s,opacity 0.2s linear );
+    &.shown {
+      opacity: 1;
+      visibility:visible;
+      @include transition-delay( 0s );
+    }//&.shown
+  }//ul
+
+  .drop-indicator {
+    color: #eee;
+    position: absolute;
+    width: 2em;
+    right: 0;
+    top: 6px;
+    bottom: 6px;
+    border-left: 1px solid white;
+    text-align: center;
+    cursor: pointer;
+    @include user-select( none );
+  }//.drop-indicator
+}//.dropdown
+
+.action-buttons button { width: 9.2em; }
+.selector-engine button { width: 7.2em; }
+.selector-engine-label { padding-left: 1em; }

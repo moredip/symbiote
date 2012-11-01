@@ -1,0 +1,24 @@
+html {
+  background-color: #efefef;
+  font-family: "Helvetica Neue", "HelveticaNeue", Arial;
+  font-size: 16px;
+}
+
+input, button {
+  padding: 8px 2em 8px 0.5em;
+  @include border-radius( 3px );
+  @include box-shadow( inset 0 1px 3px 0px rgba(0,0,0, .7));
+}
+
+input {
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255, .2);
+}
+
+button {
+  color: #fff;
+  text-shadow: 0 -1px rgba(0,0,0, .3);
+  @include linear-gradient(top, #ddd, #999);
+  &:hover { @include linear-gradient(top, #ccc, #999); }
+  &:active { background: #999; }
+}//button
