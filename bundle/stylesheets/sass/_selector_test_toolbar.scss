@@ -2,6 +2,9 @@
 // horizontal layout
 $wrap-middle-width: 60%;
 $wrap-outter-width: (100% - $wrap-middle-width)/2;
+//----------------------------------------------
+
+
 #selector-test {
   position: relative;
   text-align: center;
@@ -15,34 +18,39 @@ $wrap-outter-width: (100% - $wrap-middle-width)/2;
     &.outter { width: $wrap-outter-width; }
   }//.wrap
 
-  input {
-    &#selector_engine { width: 13em; }
-    &#query { width: 100%; }
-  }//input
+  #query { width: 100%; }
 
   label {
     display: block;
+    text-align: left;
+    text-transform: capitalize;
     &:after { content: "#{$arrow-right-down}"; }
-
-    &.query {}//&.query
   }//label
 }//#selector-test
 
+$drop-indicator-width: 2em;
+
 .dropdown {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: 100%;
 
   * { z-index: $dropdown-child-z; }
 
   button {
     position: relative;
     width: 100%;
-    padding: 8px 2em 8px 0.8em;
+    padding-left: .8em;
+    padding-right: $drop-indicator-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }//button
 
   ul {
     position: absolute;
     top: 100%;
+    width: 100%;
     float: left;
     opacity: 0;
     visibility: hidden;
@@ -57,7 +65,7 @@ $wrap-outter-width: (100% - $wrap-middle-width)/2;
   .drop-indicator {
     color: #eee;
     position: absolute;
-    width: 2em;
+    width: $drop-indicator-width;
     right: 0;
     top: 6px;
     bottom: 6px;
@@ -67,7 +75,3 @@ $wrap-outter-width: (100% - $wrap-middle-width)/2;
     @include user-select( none );
   }//.drop-indicator
 }//.dropdown
-
-.action-buttons button { width: 9.2em; }
-.selector-engine button { width: 7.2em; }
-.selector-engine-label { padding-left: 1em; }
