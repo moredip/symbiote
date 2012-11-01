@@ -4,7 +4,6 @@ $wrap-middle-width: 60%;
 $wrap-outter-width: (100% - $wrap-middle-width)/2;
 //----------------------------------------------
 
-
 #selector-test {
   position: relative;
   text-align: center;
@@ -24,7 +23,12 @@ $wrap-outter-width: (100% - $wrap-middle-width)/2;
     display: block;
     text-align: left;
     text-transform: capitalize;
-    &:after { content: "#{$arrow-right-down}"; }
+    &:after {
+      content: "#{$arrow-right-down}";
+      font-size: .8em;
+      font-weight: bold;
+      padding-left: .3em;
+    }
   }//label
 }//#selector-test
 
