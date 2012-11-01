@@ -2,11 +2,14 @@
 @import "_reset.scss";
 @import "_solarized.scss";
 @import "_jquery.treeview.scss";
-
+//-------------------------------
+$arrow-right-down: "\21b4";
+$arrow-down-right: "\21b3";
+$arrow-right: "\2192";
 //-------------------------------------------------------------
 // This should only be enabled for testing rotation when you're
 // not actually running Symbiote in a device
-button#ui-locator-rotator{ display: none; }
+button#ui-locator-rotator { display: none; }
 //-------------------------------------------------------------
 
 html {
@@ -30,13 +33,10 @@ button {
   color: #fff;
   text-shadow: 0 -1px rgba(0,0,0, .3);
   @include linear-gradient(top, #ddd, #999);
-}
+  &:hover { @include linear-gradient(top, #ccc, #999); }
+  &:active { background: #999; }
+}//button
 
-button:hover {
-  @include linear-gradient(top, #ccc, #999);
-}
-
-button:active { background: #999; }
 
 #header {
   position: relative;
@@ -46,18 +46,18 @@ button:active { background: #999; }
   color: #fff;
   text-shadow: 0 -1px rgba(0,0,0, .4);
   @include linear-gradient(top, rgba(102,102,102, 1), rgba(51,51,51, 1) );
-}
 
-#header a {
-  color: #aaff00;
-  font-size: 20px;
-  font-weight: bold;
-}
+  a {
+    color: #aaff00;
+    font-size: 20px;
+    font-weight: bold;
+  }//a
 
-#header h1 {
-  font-size: 2em;
-  float: left;
-}
+  h1 {
+    font-size: 2em;
+    float: left;
+  }//h1
+}//#header
 
 .toast {
   padding-top: 40px;
@@ -68,111 +68,112 @@ button:active { background: #999; }
   font-size: 1.1em;
   font-style: italic;
   @include transition( all 0.2s linear );
-}
-.toast.show { padding-top: 8px; }
+  &.show { padding-top: 8px; }
+}//.toast
 
-#refresh { float: right; }
-#refresh button, #refresh span {
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: block;
-  text-align: center;
-  @include border-radius( 3px 0 0 3px );
-}
-#refresh span {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: url('images/loader.png') center center no-repeat;
-  background-size: 80% auto;
-  @include transition( background 1s );
-}
 
-.working #refresh span {
-  background-image:url('images/loader.gif');
-  background-size: 80% auto;
-}
+$refresh-size: 40px;
+#refresh {
+  float: right;
 
+  button, span {
+    height: $refresh-size;
+    width: $refresh-size;
+    display: block;
+    text-align: center;
+    @include border-radius( 3px 0 0 3px );
+  }//button,span
+
+  button { position: relative; }
+
+  span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url('/images/loader.png') center center no-repeat;
+    background-size: 80% auto;
+    @include transition( background 1s );
+    .working & {
+      background-image:url('/images/loader.gif');
+      background-size: 80% auto;
+    }//.working&
+  }//span
+}//#refresh
+
+$selector-test-height: 50px;
 #selector-test {
   position: relative;
   padding: 8px;
   text-align: center;
-}
 
-#selector-test .wrap {
-  display: inline-block;
-  position: relative;
-  vertical-align: middle;
-  height: 50px;
-  padding: 0 .5em;
-}
-#selector-test .wrap.middle { max-width: 40%; }
-#selector-test .wrap.outter { max-width: 30%; }
-#selector-test input#selector_engine { width: 13em; }
-#selector-test input#query { width: 70%; }
-#selector-test label.query { width: 30%; float: left; overflow: hidden; height: 40px; }
-#selector-test label:after { content: "\2192"; }
+  .wrap {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    height: $selector-test-height;
+    padding: 0 .5em;
+    &.middle { max-width: 40%; }
+    &.outter { max-width: 30%; }
+  }//.wrap
+
+  input {
+    &#selector_engine { width: 13em; }
+    &#query { width: 70%; }
+  }//input
+
+  label {
+    &.query { width: 30%; float: left; overflow: hidden; height: 40px; }
+    &:after { content: "#{$arrow-right-down}"; }
+  }//label
+}//#selector-test
+
+
 
 .dropdown {
   position: relative;
   display: inline-block;
-}
 
-.dropdown button {
-  position: relative;
-  width: 100%;
-}
-.dropdown ul {
-  position: absolute;
-  top: 100%;
-  float: left;
-  list-style: none;
-}
+  button {
+    position: relative;
+    width: 100%;
+    padding: 8px 2em 8px 0.8em;
+  }//button
 
-.dropdown * {
-  z-index: 1;
-}
-.dropdown ul {
-  z-index: 1;
-  opacity: 0;
-  visibility:hidden;
-  @include transition-two( visibility 0s linear 0.2s,opacity 0.2s linear );
-}
-.dropdown ul.shown {
-  opacity: 1;
-  visibility:visible;
-  transition-delay:0s;
-  @include transition-delay( 0s );
-}
+  ul {
+    position: absolute;
+    top: 100%;
+    float: left;
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    @include transition-two( visibility 0s linear 0.2s,opacity 0.2s linear );
+    &.shown {
+      opacity: 1;
+      visibility:visible;
+      transition-delay:0s;
+      @include transition-delay( 0s );
+    }//&.shown
+  }//ul
 
-.dropdown .drop-indicator {
-  color: #eee;
-  position: absolute;
-  width: 2em;
-  right: 0;
-  top: 6px;
-  bottom: 6px;
-  border-left: 1px solid white;
-  text-align: center;
-  cursor: pointer;
-  @include user-select( none );
-}
+  * { z-index: 1; }
 
-.dropdown button {
-  padding: 8px 2em 8px 0.8em;
-}
+  .drop-indicator {
+    color: #eee;
+    position: absolute;
+    width: 2em;
+    right: 0;
+    top: 6px;
+    bottom: 6px;
+    border-left: 1px solid white;
+    text-align: center;
+    cursor: pointer;
+    @include user-select( none );
+  }//.drop-indicator
+}//.dropdown
 
-.action-buttons button {
-  width: 9.2em;
-}
-.selector-engine button {
-  width: 7.2em;
-}
-
-.selector-engine-label {
-  padding-left: 1em;
-}
+.action-buttons button { width: 9.2em; }
+.selector-engine button { width: 7.2em; }
+.selector-engine-label { padding-left: 1em; }
 
 //------------------------------------------------------------
 // .action-buttons {
@@ -225,6 +226,10 @@ button:active { background: #999; }
   left: 0;
 }
 
+$inspect-tabs-width: 60%;
+$list-tabs-width: 100% - $inspect-tabs-width;
+$landscape-inspect-tabs-width: 50%;
+$landscape-list-tabs-width: 100% - $landscape-inspect-tabs-width;
 #inspect-tabs, #list-tabs {
   position: absolute;
   top: 0;
@@ -233,25 +238,23 @@ button:active { background: #999; }
 
 #inspect-tabs {
   right: 0;
-  left: 60%;
+  left: $inspect-tabs-width;
   overflow: hidden;
   border-left: 1px solid rgba(255,255,255, .1);
   @include transition( left .3s );
   @include box-shadow( inset 3px 0 3px 0 rgba(0,0,0, .4));
   @include border-radius( 3px 0 0 0 );
+  .landscape & { left: $landscape-inspect-tabs-width; }// respond to landscape view.
 }
 
 #list-tabs {
-  right: 40%;
+  right: $list-tabs-width;
   left: 0;
   @include transition( right .3s );
   @include border-radius( 0 3px 0 0 );
   @include box-shadow( inset -3px 0 3px 0 rgba(0,0,0, .4));
+  .landscape & { right: $landscape-list-tabs-width; }// respond to landscape view.
 }
-
-// respond to landscape view.
-.landscape #inspect-tabs { left: 50%; }
-.landscape #list-tabs { right: 50%; }
 
 
 #list-tabs > div, #dom-detail {
@@ -263,83 +266,82 @@ button:active { background: #999; }
   overflow-y: scroll;
 }
 
-#inspect-tabs > ul, #list-tabs > ul {
-  overflow: hidden;
-  @include box-shadow( inset 0 1px 3px 0px rgba(0,0,0, .7));
-}
-
-#inspect-tabs > ul > li, #list-tabs > ul > li {
-  float: left;
-  position: relative;
-  width: 50%;
-  display: inline-block;
-  font-size: 12px;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  border: none;
-  @include border-radius( 0 );
-}
-
-#inspect-tabs > ul > li > a, #list-tabs > ul > li > a {
-  float: none;
-  padding: inherit;
-  line-height: 40px;
-  cursor: pointer;
-  display: block;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  text-shadow: 0 -1px rgba(0,0,0, .3);
-  @include linear-gradient(top, rgba(221,221,221, .6), rgba(153,153,153, .6) );
-  @include box-shadow( inset 0 0 2px 0px rgba(0,0,0, .4));
-}
-
-#inspect-tabs > ul > li.ui-tabs-selected > a,
-#inspect-tabs > ul > li.ui-tabs-selected > a:hover,
-#list-tabs > ul > li.ui-tabs-selected > a,
-#list-tabs > ul > li.ui-tabs-selected > a:hover {
-  @include linear-gradient(top, #2380CC, #154E7C);
-}
-
-#inspect-tabs > ul > li > a:hover, #list-tabs > ul > li > a:hover {
-  @include linear-gradient(top, rgba(204,204,204, .6), rgba(153,153,153, .6) );
-}
-
-#inspect-tabs > ul > li > a:active, #list-tabs > ul > li > a:active {
-  background: rgba(153,153,153, .6);
-  @include box-shadow( inset 0 0 3px 0px rgba(0,0,0, .4));
-}
+#inspect-tabs, #list-tabs {
+  > ul {
+    overflow: hidden;
+    @include box-shadow( inset 0 1px 3px 0px rgba(0,0,0, .7));
+     > li {
+      float: left;
+      position: relative;
+      width: 50%;
+      display: inline-block;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      border: none;
+      @include border-radius( 0 );
+      > a {
+        float: none;
+        padding: inherit;
+        line-height: 40px;
+        cursor: pointer;
+        display: block;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        text-shadow: 0 -1px rgba(0,0,0, .3);
+        @include linear-gradient(top, rgba(221,221,221, .6), rgba(153,153,153, .6) );
+        @include box-shadow( inset 0 0 2px 0px rgba(0,0,0, .4));
+        &:hover { @include linear-gradient(top, rgba(204,204,204, .6), rgba(153,153,153, .6) ); }
+        &:active {
+          background: rgba(153,153,153, .6);
+          @include box-shadow( inset 0 0 3px 0px rgba(0,0,0, .4));
+        }//&:active
+      }//>a
+      &.ui-tabs-selected > a {
+        // regarding: &, &:hover
+        // this hits botht the 'a' and 'a:hover'
+        &, &:hover { @include linear-gradient(top, #2380CC, #154E7C); }
+      }//&.ui-tabs-selected > a
+    }//>li
+  }//>ul
+}//#inspect-tabs, #list-tabs
 
 a#dump_button { vertical-align: middle; }
 
-#dom-dump { padding: 0 10px 10px 10px; }
-#dom-dump .treeview .hovered-in-locator { color: #2aa198; }
+#dom-dump {
+  padding: 0 10px 10px 10px;
+  .treeview .hovered-in-locator { color: #2aa198; }
+}//#dom-dump
 
 #dom-detail, #accessible-views-tab { padding: 10px; }
+
 #dom-detail {
   font-size: 0.8em;
   word-break: break-word;
-}
 
-#dom-detail li {
-  padding: 6px 0;
-  border-top: 2px solid rgba(255,255,255, .7);
-  border-bottom: 1px solid rgba(0, 0, 0, .2);
-  @include transition( background-color .1s );
-}
-#dom-detail li:first-child { border-top: none; }
-#dom-detail li:last-child { border-bottom: none; }
-#dom-detail li:hover { background-color: rgba(255,255,255, .4); }
-#dom-detail .key { font-size: 1.5em; }
+  li {
+    padding: 6px 0;
+    border-top: 2px solid rgba(255,255,255, .7);
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    @include transition( background-color .1s );
+    &:first-child { border-top: none; }
+    &:last-child { border-bottom: none; }
+    &:hover { background-color: rgba(255,255,255, .4); }
+  }//li
 
-#dom-detail .value:before {
-  content: "\21b3";
-  padding-left: 2px;
-  color: #999;
-}
+  .key { font-size: 1.5em; }
 
-#dom-detail .interesting { font-weight: bold; }
+  .value:before {
+    content: "#{$arrow-down-right}";
+    padding-left: 2px;
+    color: #999;
+  }//.value:before
+
+  .interesting { font-weight: bold; }
+}//#dom-detail
+
 
 #accessible-views-tab div.hints{
   font-size: 0.8em;
@@ -348,19 +350,21 @@ a#dump_button { vertical-align: middle; }
   margin-bottom: 20px;
 }
 
-#accessible-views a {
-  display: block;
-  margin: 10px 0;
-  color: #d33682;
-  font-style: italic;
-  @include transition( color .15s );
-}
-#accessible-views a:hover { color: #268bd2; }
+#accessible-views {
+  a {
+    display: block;
+    margin: 10px 0;
+    color: #d33682;
+    font-style: italic;
+    @include transition( color .15s );
+    &:hover { color: #268bd2; }
+  }//a
 
-#accessible-views span {
-  font-style: normal;
-  font-weight: bold;
-}
+  span {
+    font-style: normal;
+    font-weight: bold;
+  }//span
+}//#accessible-views
 
 #ui-locator { padding: 0; }
 
@@ -372,16 +376,14 @@ a#dump_button { vertical-align: middle; }
 
 #live-view button {
   @include border-radius( 0 );
-}
 
-#live-view button.down,#asploder button.down {
-  @include linear-gradient(top, #2380CC, #154E7C);
-}
+  span {
+    font-family: Pictos;
+    font-size: 20px;
+  }//span
+}//#live-view button
 
-#live-view button span {
-  font-family: Pictos;
-  font-size: 20px;
-}
+#live-view button.down, #asploder button.down { @include linear-gradient(top, #2380CC, #154E7C); }
 
 #ui-locator-view{
   position: absolute;
@@ -392,21 +394,18 @@ a#dump_button { vertical-align: middle; }
   left: 0;
   text-align: center;
   @include transition( transform .3s );
-}
+
+  &.landscape{
+    position: absolute;
+    @include transform( rotate(90deg) );
+  }//&.landscape
+}//#ui-locator-view
 
 #ui-locator-rotator {
   float: right;
   font-family: Pictos;
   @include border-radius( 0 0 0 3px );
 }
-
-#ui-locator-view.landscape{
-  position: absolute;
-  @include transform( rotate(90deg) );
-}
-
-ul { list-style-type: none; }
-ul.features li { margin-top: 5px; }
 
 // jqui
 .ui-state-disabled { cursor: default !important; }
