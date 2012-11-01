@@ -1,11 +1,9 @@
 //-------------------------------
 // primary application file
 // all partials should be loaded here.
-$arrow-right-down: "\21b4";
-$arrow-down-right: "\21b3";
-$arrow-right: "\2192";
 //-------------------------------
 // base
+@import "_unicode.scss";
 @import "_mixins.sass";
 @import "_solarized.scss";
 @import "_reset.scss";
