@@ -167,7 +167,7 @@ a#dump_button { vertical-align: middle; }
 
 #ui-locator-view {
   position: absolute;
-  z-index: -1;
+  z-index: $ui-locator-view-z;
   top: 40px;
   right: 0;
   bottom: 0;
