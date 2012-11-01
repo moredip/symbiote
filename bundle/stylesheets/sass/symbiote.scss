@@ -2,6 +2,7 @@
 @import "_reset.scss";
 @import "_solarized.scss";
 @import "_jquery.treeview.scss";
+@import "_layout.scss";
 //-------------------------------
 $arrow-right-down: "\21b4";
 $arrow-down-right: "\21b3";
@@ -40,7 +41,7 @@ button {
 
 #header {
   position: relative;
-  height: 40px;
+  height: $header-height;
   padding-left: 10px;
   overflow: hidden;
   color: #fff;
@@ -59,20 +60,20 @@ button {
   }//h1
 }//#header
 
+
 .toast {
-  padding-top: 40px;
-  padding-left: 40px;
+  padding-top: $toast-height;
+  padding-left: $toast-height;
   float: left;
-  height: 40px;
+  height: $toast-height;
   color: hotpink; // love the hotpink
   font-size: 1.1em;
   font-style: italic;
   @include transition( all 0.2s linear );
-  &.show { padding-top: 8px; }
+  &.show { padding-top: 8px; } //TODO $toast-line-height - $toast-height
 }//.toast
 
 
-$refresh-size: 40px;
 #refresh {
   float: right;
 
@@ -100,7 +101,12 @@ $refresh-size: 40px;
   }//span
 }//#refresh
 
-$selector-test-height: 50px;
+
+$wrap-middle-width: 40%;
+$wrap-outter-width: 100% - ($wrap-middle-width/2);
+$query-input-width: 70%;
+$query-label-width: 100% - $query-input-width;
+$query-label-height: 40px;
 #selector-test {
   position: relative;
   padding: 8px;
@@ -112,26 +118,32 @@ $selector-test-height: 50px;
     vertical-align: middle;
     height: $selector-test-height;
     padding: 0 .5em;
-    &.middle { max-width: 40%; }
-    &.outter { max-width: 30%; }
+    &.middle { max-width: $wrap-middle-width; }
+    &.outter { max-width: $wrap-outter-width; }
   }//.wrap
 
   input {
     &#selector_engine { width: 13em; }
-    &#query { width: 70%; }
+    &#query { width: $query-input-width; }
   }//input
 
   label {
-    &.query { width: 30%; float: left; overflow: hidden; height: 40px; }
     &:after { content: "#{$arrow-right-down}"; }
+
+    &.query {
+      width: $query-label-width;
+      float: left;
+      overflow: hidden;
+      height: $query-label-height;
+    }//&.query
   }//label
 }//#selector-test
-
-
 
 .dropdown {
   position: relative;
   display: inline-block;
+
+  * { z-index: 1; }
 
   button {
     position: relative;
@@ -150,12 +162,9 @@ $selector-test-height: 50px;
     &.shown {
       opacity: 1;
       visibility:visible;
-      transition-delay:0s;
       @include transition-delay( 0s );
     }//&.shown
   }//ul
-
-  * { z-index: 1; }
 
   .drop-indicator {
     color: #eee;
@@ -177,7 +186,7 @@ $selector-test-height: 50px;
 
 .the-columns {
   position: absolute;
-  top: 90px;
+  top: $columns-top;
   right: 0;
   bottom: 0;
   left: 0;
