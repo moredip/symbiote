@@ -1,7 +1,7 @@
 (function() {
 
   define(['view_model'], function(ViewModel) {
-    var ViewCollection, ViewHeirModel, flatten;
+    var ViewCollection, ViewHierModel, flatten;
     ViewCollection = Backbone.Collection;
     flatten = function(rootViewModel) {
       var childViewModel, flattenedViewModels, _i, _len, _ref;
@@ -13,13 +13,13 @@
       }
       return flattenedViewModels;
     };
-    ViewHeirModel = Backbone.Model.extend({
+    ViewHierModel = Backbone.Model.extend({
       getAccessibleViews: function() {
         return this.get('allViews').filter(function(viewModel) {
           return viewModel.has('accessibilityLabel');
         });
       },
-      resetViewHeir: function(rawRootView) {
+      resetViewHier: function(rawRootView) {
         var allViews, rootViewModel,
           _this = this;
         rootViewModel = new ViewModel(rawRootView);
@@ -42,7 +42,7 @@
         return this.set('allViews', allViews);
       }
     });
-    return ViewHeirModel;
+    return ViewHierModel;
   });
 
 }).call(this);

@@ -1,7 +1,7 @@
 RELOAD_INTERVAL = 500
 
-guessAtDeviceFamilyBasedOnViewDump = (viewHeir)->
-    switch viewHeir.accessibilityFrame.size.height
+guessAtDeviceFamilyBasedOnViewDump = (viewHier)->
+    switch viewHier.accessibilityFrame.size.height
       when 1024 then 'ipad'
       when 480 then 'iphone'
       else
@@ -104,10 +104,10 @@ define ['frank'],(frank)->
         
     reload = ->
       deferable = $.Deferred()
-      $.when( frank.fetchViewHeirarchy(), frank.fetchOrientation() ).done( ([rawHeir,],orientation)->
-        deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHeir)
+      $.when( frank.fetchViewHierarchy(), frank.fetchOrientation() ).done( ([rawHier,],orientation)->
+        deviceFamily = guessAtDeviceFamilyBasedOnViewDump(rawHier)
 
-        treeView.model.resetViewHeir(rawHeir)
+        treeView.model.resetViewHier(rawHier)
         ersatzView.model.resetViews(treeView.model.get('allViews'),deviceFamily,orientation)
 
         accessibleViews = treeView.model.getAccessibleViews()
