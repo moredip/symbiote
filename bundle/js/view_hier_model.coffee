@@ -10,11 +10,11 @@ define ['view_model'], (ViewModel)->
 
 
 
-  ViewHeirModel = Backbone.Model.extend
+  ViewHierModel = Backbone.Model.extend
     getAccessibleViews: ->
       @get( 'allViews' ).filter (viewModel)-> viewModel.has('accessibilityLabel')
 
-    resetViewHeir: (rawRootView)->
+    resetViewHier: (rawRootView)->
       rootViewModel = new ViewModel(rawRootView) 
       allViews = new ViewCollection( flatten( rootViewModel ) )
 
@@ -34,4 +34,4 @@ define ['view_model'], (ViewModel)->
       @set( 'allViews', allViews )
 
 
-  ViewHeirModel
+  ViewHierModel
