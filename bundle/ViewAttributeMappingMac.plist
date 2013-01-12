@@ -20,7 +20,6 @@
 		<string>isRotatedOrScaledFromBase</string>
 		<string>isInFullScreenMode</string>
 		<string>isOpaque</string>
-		<string>tooltip</string>
 		<string>canBecomeKeyView</string>
 		<string>acceptsTouchEvents</string>
 		<string>wantsRestingTouches</string>
@@ -39,7 +38,6 @@
 	</array>
 	<key>NSControl</key>
 	<array>
-		<string>value</string>
 		<string>stringValue</string>
 		<string>attributedStringValue</string>
 	</array>
