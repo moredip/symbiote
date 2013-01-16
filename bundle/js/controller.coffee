@@ -5,7 +5,7 @@ guessAtDeviceFamilyBasedOnViewDump = (viewHeir)->
       when 1024 then 'ipad'
       when 480 then 'iphone'
       else
-        console.warn( "couldn't recognize device family based on screen height of " + data.accessibilityFrame.size.height + "px" )
+        console.warn( "couldn't recognize device family based on screen height of " + viewHeir.accessibilityFrame.size.height + "px" )
         'unknown'
 
 define ['frank'],(frank)->
