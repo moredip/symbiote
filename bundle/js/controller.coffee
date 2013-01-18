@@ -3,7 +3,7 @@ RELOAD_INTERVAL = 500
 guessAtDeviceFamilyBasedOnViewDump = (viewHeir)->
     switch viewHeir.accessibilityFrame.size.height
       when 1024 then 'ipad'
-      when 480 then 'iphone'
+      when 480, 568 then 'iphone'
       else
         console.warn( "couldn't recognize device family based on screen height of " + viewHeir.accessibilityFrame.size.height + "px" )
         'unknown'
